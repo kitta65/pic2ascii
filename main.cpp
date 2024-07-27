@@ -16,7 +16,11 @@ int main(int argc, char* argv[]) {
 
   // load image data
   int x, y, n;
-  unsigned char *data = stbi_load(filename, &x, &y, &n, 4);
+  unsigned char* data = stbi_load(filename, &x, &y, &n, 4);
+  if (data == NULL) {
+    cerr << "failed to load image" << endl;
+    return EXIT_FAILURE;
+  }
   cout << x << endl;
   cout << y << endl;
   cout << n << endl;
