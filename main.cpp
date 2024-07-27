@@ -1,12 +1,22 @@
 #include <iostream>
+
+// see https://github.com/nothings/stb/blob/master/stb_image.h
 #define STB_IMAGE_IMPLEMENTATION
 #include "./libraries/stb_image.h"
 
-using std::cout, std::endl;
+using std::cin, std::cout, std::endl, std::cerr;
 
-int main() {
+int main(int argc, char* argv[]) {
+  // handle CLI arguments
+  if (argc != 2) {
+    cerr << "invalid arguments" << endl;
+    return EXIT_FAILURE;
+  }
+  char* filename = argv[1];
+
+  // load image data
   int x, y, n;
-  unsigned char *data = stbi_load("./pictures/black.png", &x, &y, &n, 4);
+  unsigned char *data = stbi_load(filename, &x, &y, &n, 4);
   cout << x << endl;
   cout << y << endl;
   cout << n << endl;
