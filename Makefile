@@ -17,20 +17,17 @@ libraries/catch_amalgamated.hpp: libraries
 libraries/catch_amalgamated.cpp: libraries
 	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
 
-objects:
-	mkdir objects
+objects/%.o: %.cpp
+	mkdir -p objects
+	g++ -std=$(CPP_VERSION) -o $@ -c $<
 
-objects/catch_amalgamated.o: objects libraries/catch_amalgamated.hpp libraries/catch_amalgamated.cpp
-	g++ -std=$(CPP_VERSION) -o $@ -c libraries/catch_amalgamated.cpp
+objects/catch_amalgamated.o: libraries/catch_amalgamated.hpp 
 
-objects/main.o: objects libraries/stb_image.h utils.hpp main.cpp
-	g++ -std=$(CPP_VERSION) -o $@ -c main.cpp
+objects/main.o: utils.hpp libraries/stb_image.h
 
-objects/utils.o: objects utils.hpp utils.cpp
-	g++ -std=$(CPP_VERSION) -o $@ -c utils.cpp
+objects/utils.o: utils.cpp utils.hpp
 
-objects/test.o: objects libraries/catch_amalgamated.hpp utils.hpp test.cpp
-	g++ -std=$(CPP_VERSION) -o $@ -c test.cpp
+objects/test.o: libraries/catch_amalgamated.hpp
 
 bin:
 	mkdir bin
