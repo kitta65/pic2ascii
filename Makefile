@@ -1,5 +1,5 @@
 .PHONY: default
-default: out/main
+default: bin/main
 
 libraries/stb_image.h:
 	mkdir -p libraries
@@ -21,18 +21,18 @@ objects/test.o: libraries/catch_amalgamated.hpp test.cpp
 	mkdir -p obejects
 	g++ -std=c++20 -o objects/test.o -c test.cpp
 
-out/main: libraries/stb_image.h main.cpp
-	mkdir -p out
-	g++ -std=c++20 -o out/main main.cpp
+bin/main: libraries/stb_image.h main.cpp
+	mkdir -p bin
+	g++ -std=c++20 -o bin/main main.cpp
 
-out/test: objects/catch_amalgamated.o objects/test.o
-	mkdir -p out
-	g++ -std=c++20 -o out/test objects/catch_amalgamated.o objects/test.o
+bin/test: objects/catch_amalgamated.o objects/test.o
+	mkdir -p bin
+	g++ -std=c++20 -o bin/test objects/catch_amalgamated.o objects/test.o
 
 .PHONY: test
-test: out/test
-	./out/test
+test: bin/test
+	./bin/test
 
 .PHONY: clean
 clean:
-	rm -rf libraries objects out
+	rm -rf libraries objects bin
