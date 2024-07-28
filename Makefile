@@ -9,37 +9,37 @@ libraries:
 	mkdir libraries
 
 libraries/stb_image.h: libraries
-	curl -o libraries/stb_image.h https://raw.githubusercontent.com/nothings/stb/$(STB_VERSION)/stb_image.h
+	curl -o $@ https://raw.githubusercontent.com/nothings/stb/$(STB_VERSION)/stb_image.h
 
 libraries/catch_amalgamated.hpp: libraries
-	curl -o libraries/catch_amalgamated.hpp https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.hpp
+	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.hpp
 
 libraries/catch_amalgamated.cpp: libraries
-	curl -o libraries/catch_amalgamated.cpp https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
+	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
 
 objects:
 	mkdir objects
 
 objects/catch_amalgamated.o: objects libraries/catch_amalgamated.hpp libraries/catch_amalgamated.cpp
-	g++ -std=$(CPP_VERSION) -o objects/catch_amalgamated.o -c libraries/catch_amalgamated.cpp
+	g++ -std=$(CPP_VERSION) -o $@ -c libraries/catch_amalgamated.cpp
 
 objects/main.o: objects libraries/stb_image.h utils.hpp main.cpp
-	g++ -std=$(CPP_VERSION) -o objects/main.o -c main.cpp
+	g++ -std=$(CPP_VERSION) -o $@ -c main.cpp
 
 objects/utils.o: objects utils.hpp utils.cpp
-	g++ -std=$(CPP_VERSION) -o objects/utils.o -c utils.cpp
+	g++ -std=$(CPP_VERSION) -o $@ -c utils.cpp
 
 objects/test.o: objects libraries/catch_amalgamated.hpp utils.hpp test.cpp
-	g++ -std=$(CPP_VERSION) -o objects/test.o -c test.cpp
+	g++ -std=$(CPP_VERSION) -o $@ -c test.cpp
 
 bin:
 	mkdir bin
 
 bin/main: bin objects/main.o objects/utils.o
-	g++ -std=$(CPP_VERSION) -o bin/main objects/utils.o objects/main.o
+	g++ -std=$(CPP_VERSION) -o $@ objects/utils.o objects/main.o
 
 bin/test: bin objects/catch_amalgamated.o objects/utils.o objects/test.o
-	g++ -std=$(CPP_VERSION) -o bin/test objects/catch_amalgamated.o objects/utils.o objects/test.o
+	g++ -std=$(CPP_VERSION) -o $@ objects/catch_amalgamated.o objects/utils.o objects/test.o
 
 .PHONY: run
 run: bin/main
