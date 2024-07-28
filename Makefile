@@ -17,17 +17,29 @@ objects/catch_amalgamated.o: libraries/catch_amalgamated.hpp libraries/catch_ama
 	mkdir -p objects
 	g++ -std=c++20 -o objects/catch_amalgamated.o -c libraries/catch_amalgamated.cpp
 
-objects/test.o: libraries/catch_amalgamated.hpp test.cpp
+objects/main.o: libraries/stb_image.h utils.hpp main.cpp
+	mkdir -p obejects
+	g++ -std=c++20 -o objects/main.o -c main.cpp
+
+objects/utils.o: utils.hpp utils.cpp
+	mkdir -p obejects
+	g++ -std=c++20 -o objects/utils.o -c utils.cpp
+
+objects/test.o: libraries/catch_amalgamated.hpp utils.hpp test.cpp
 	mkdir -p obejects
 	g++ -std=c++20 -o objects/test.o -c test.cpp
 
-bin/main: libraries/stb_image.h main.cpp
+bin/main: objects/main.o
 	mkdir -p bin
-	g++ -std=c++20 -o bin/main main.cpp
+	g++ -std=c++20 -o bin/main objects/utils.o objects/main.o
 
-bin/test: objects/catch_amalgamated.o objects/test.o
+bin/test: objects/catch_amalgamated.o objects/utils.o objects/test.o
 	mkdir -p bin
-	g++ -std=c++20 -o bin/test objects/catch_amalgamated.o objects/test.o
+	g++ -std=c++20 -o bin/test objects/catch_amalgamated.o objects/utils.o objects/test.o
+
+.PHONY: run
+run: bin/main
+	./bin/main ./pictures/black.png
 
 .PHONY: test
 test: bin/test

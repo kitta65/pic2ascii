@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "utils.hpp"
+
 // see https://github.com/nothings/stb/blob/master/stb_image.h
 #define STB_IMAGE_IMPLEMENTATION
 #include "./libraries/stb_image.h"
@@ -25,4 +27,7 @@ int main(int argc, char* argv[]) {
   cout << y << endl;
   cout << n << endl;
   stbi_image_free(data);
+
+  // try to use functions in utils.cpp
+  cout << "my_sum(1, 2) = " << my_sum(1, 2) << endl;
 }
