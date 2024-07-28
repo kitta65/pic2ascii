@@ -35,7 +35,7 @@ objects/test.o: objects libraries/catch_amalgamated.hpp utils.hpp test.cpp
 bin:
 	mkdir bin
 
-bin/main: bin objects/main.o
+bin/main: bin objects/main.o objects/utils.o
 	g++ -std=$(CPP_VERSION) -o bin/main objects/utils.o objects/main.o
 
 bin/test: bin objects/catch_amalgamated.o objects/utils.o objects/test.o
