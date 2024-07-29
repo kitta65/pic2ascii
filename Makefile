@@ -9,37 +9,33 @@ libraries:
 	mkdir libraries
 
 libraries/stb_image.h: libraries
-	curl -o libraries/stb_image.h https://raw.githubusercontent.com/nothings/stb/$(STB_VERSION)/stb_image.h
+	curl -o $@ https://raw.githubusercontent.com/nothings/stb/$(STB_VERSION)/stb_image.h
 
 libraries/catch_amalgamated.hpp: libraries
-	curl -o libraries/catch_amalgamated.hpp https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.hpp
+	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.hpp
 
 libraries/catch_amalgamated.cpp: libraries
-	curl -o libraries/catch_amalgamated.cpp https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
+	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
 
-objects:
-	mkdir objects
+objects/%.o: %.cpp
+	mkdir -p objects/libraries
+	g++ -std=$(CPP_VERSION) -o $@ -c $<
 
-objects/catch_amalgamated.o: objects libraries/catch_amalgamated.hpp libraries/catch_amalgamated.cpp
-	g++ -std=$(CPP_VERSION) -o objects/catch_amalgamated.o -c libraries/catch_amalgamated.cpp
+objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
-objects/main.o: objects libraries/stb_image.h utils.hpp main.cpp
-	g++ -std=$(CPP_VERSION) -o objects/main.o -c main.cpp
+objects/main.o: libraries/stb_image.h utils.hpp
 
-objects/utils.o: objects utils.hpp utils.cpp
-	g++ -std=$(CPP_VERSION) -o objects/utils.o -c utils.cpp
+objects/utils.o: utils.hpp
 
-objects/test.o: objects libraries/catch_amalgamated.hpp utils.hpp test.cpp
-	g++ -std=$(CPP_VERSION) -o objects/test.o -c test.cpp
+objects/test.o: libraries/catch_amalgamated.hpp
 
-bin:
-	mkdir bin
+bin/%: objects/%.o
+	mkdir -p bin
+	g++ -std=$(CPP_VERSION) -o $@ $^
 
-bin/main: bin objects/main.o objects/utils.o
-	g++ -std=$(CPP_VERSION) -o bin/main objects/utils.o objects/main.o
+bin/main: objects/utils.o
 
-bin/test: bin objects/catch_amalgamated.o objects/utils.o objects/test.o
-	g++ -std=$(CPP_VERSION) -o bin/test objects/catch_amalgamated.o objects/utils.o objects/test.o
+bin/test: objects/libraries/catch_amalgamated.o objects/utils.o
 
 .PHONY: run
 run: bin/main
