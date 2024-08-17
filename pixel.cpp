@@ -7,7 +7,9 @@ Pixel::Pixel() {
   this->alpha_ = 0;
 }
 
-Pixel::Pixel(unsigned char r, unsigned char g, unsigned char b,
+Pixel::Pixel(unsigned char r,
+             unsigned char g,
+             unsigned char b,
              unsigned char a) {
   this->red_ = r;
   this->green_ = g;
