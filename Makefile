@@ -25,6 +25,8 @@ objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
 objects/main.o: libraries/stb_image.h utils.hpp
 
+objects/block.o: pixel.hpp
+
 objects/utils.o: utils.hpp
 
 objects/test.o: libraries/catch_amalgamated.hpp
@@ -35,7 +37,7 @@ bin/%: objects/%.o
 
 bin/main: objects/utils.o
 
-bin/test: objects/libraries/catch_amalgamated.o objects/pixel.o objects/utils.o
+bin/test: objects/libraries/catch_amalgamated.o objects/block.o objects/pixel.o objects/utils.o
 
 .PHONY: run
 run: bin/main

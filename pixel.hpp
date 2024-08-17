@@ -1,3 +1,6 @@
+#ifndef kitta65_pic2ascii_pixel_hpp
+#define kitta65_pic2ascii_pixel_hpp
+
 class Pixel {
  private:
   unsigned char red_;
@@ -16,3 +19,5 @@ class Pixel {
   Pixel();
   Pixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 0);
 };
+
+#endif
