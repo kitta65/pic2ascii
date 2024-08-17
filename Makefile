@@ -35,7 +35,7 @@ bin/%: objects/%.o
 
 bin/main: objects/utils.o
 
-bin/test: objects/libraries/catch_amalgamated.o objects/utils.o
+bin/test: objects/libraries/catch_amalgamated.o objects/pixel.o objects/utils.o
 
 .PHONY: run
 run: bin/main
