@@ -27,7 +27,7 @@ objects/%.o: %.cpp
 
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
-objects/src/main.o: libraries/stb_image.h libraries/stb_image_write.h
+objects/src/main.o: libraries/stb_image.h libraries/stb_image_write.h src/pixel.hpp src/block.hpp
 
 objects/src/block.o: src/pixel.hpp
 
@@ -37,6 +37,7 @@ bin/%: objects/src/%.o
 	mkdir -p bin
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
+bin/main: objects/src/pixel.o objects/src/block.o
 bin/test_pixel: objects/libraries/catch_amalgamated.o objects/src/pixel.o
 bin/test_block: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o
 
