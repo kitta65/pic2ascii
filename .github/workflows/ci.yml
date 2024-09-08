@@ -2,12 +2,12 @@ on:
   push:
 
 jobs:
-  build:
+  make-run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: make run
-  test:
+  make-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

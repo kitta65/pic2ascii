@@ -34,8 +34,6 @@ bin/%: objects/src/%.o
 	mkdir -p bin
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
-bin/main: objects/src/utils.o
-
 bin/test_pixel: objects/libraries/catch_amalgamated.o objects/src/pixel.o
 bin/test_block: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o
 
