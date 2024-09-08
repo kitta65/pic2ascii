@@ -13,3 +13,10 @@ Pixel& Block::operator[](XY xy) {
   unsigned int y = xy.y;
   return (this->pixels)[x * this->width + y];
 }
+
+void Block::Clear() {
+  for (unsigned int i = 0; i < this->height * this->width; ++i) {
+    Pixel p = pixels[i];
+    p.Clear();
+  }
+}
