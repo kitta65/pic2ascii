@@ -24,7 +24,7 @@ objects/%.o: %.cpp
 
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
-objects/src/main.o: libraries/stb_image.h src/utils.hpp
+objects/src/main.o: libraries/stb_image.h
 
 objects/src/block.o: src/pixel.hpp
 
@@ -38,15 +38,17 @@ bin/%: objects/src/%.o
 
 bin/main: objects/src/utils.o
 
-bin/test: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/pixel.o objects/src/utils.o
+bin/test_pixel: objects/libraries/catch_amalgamated.o objects/src/pixel.o
+bin/test_block: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o
 
 .PHONY: run
 run: bin/main
 	./bin/main ./pictures/black.png
 
 .PHONY: test
-test: bin/test
-	./bin/test
+test: bin/test_pixel bin/test_block
+	./bin/test_pixel
+	./bin/test_block
 
 .PHONY: clean
 clean:
