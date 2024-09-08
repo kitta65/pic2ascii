@@ -4,7 +4,7 @@
 
 // see https://github.com/nothings/stb/blob/master/stb_image.h
 #define STB_IMAGE_IMPLEMENTATION
-#include "./libraries/stb_image.h"
+#include "../libraries/stb_image.h"
 
 using std::cin, std::cout, std::endl, std::cerr;
 

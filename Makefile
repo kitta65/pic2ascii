@@ -18,26 +18,27 @@ libraries/catch_amalgamated.cpp: libraries
 	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
 
 objects/%.o: %.cpp
+	mkdir -p objects/src
 	mkdir -p objects/libraries
 	g++ -std=$(CPP_VERSION) -o $@ -c $<
 
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
-objects/main.o: libraries/stb_image.h utils.hpp
+objects/src/main.o: libraries/stb_image.h src/utils.hpp
 
-objects/block.o: pixel.hpp
+objects/src/block.o: src/pixel.hpp
 
-objects/utils.o: utils.hpp
+objects/src/utils.o: src/utils.hpp
 
-objects/test.o: libraries/catch_amalgamated.hpp
+objects/src/test.o: libraries/catch_amalgamated.hpp
 
-bin/%: objects/%.o
+bin/%: objects/src/%.o
 	mkdir -p bin
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
-bin/main: objects/utils.o
+bin/main: objects/src/utils.o
 
-bin/test: objects/libraries/catch_amalgamated.o objects/block.o objects/pixel.o objects/utils.o
+bin/test: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/pixel.o objects/src/utils.o
 
 .PHONY: run
 run: bin/main
