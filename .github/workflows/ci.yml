@@ -6,11 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: make
-      - uses: actions/upload-artifact@v4
-        with:
-          name: bin
-          path: ./bin/main
+      - run: make run
   test:
     runs-on: ubuntu-latest
     steps:

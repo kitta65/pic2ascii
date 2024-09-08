@@ -28,8 +28,6 @@ objects/src/main.o: libraries/stb_image.h
 
 objects/src/block.o: src/pixel.hpp
 
-objects/src/utils.o: src/utils.hpp
-
 objects/src/test.o: libraries/catch_amalgamated.hpp
 
 bin/%: objects/src/%.o
