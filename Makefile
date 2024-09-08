@@ -11,6 +11,9 @@ libraries:
 libraries/stb_image.h: libraries
 	curl -o $@ https://raw.githubusercontent.com/nothings/stb/$(STB_VERSION)/stb_image.h
 
+libraries/stb_image_write.h: libraries
+	curl -o $@ https://raw.githubusercontent.com/nothings/stb/$(STB_VERSION)/stb_image_write.h
+
 libraries/catch_amalgamated.hpp: libraries
 	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.hpp
 
@@ -24,7 +27,7 @@ objects/%.o: %.cpp
 
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
-objects/src/main.o: libraries/stb_image.h
+objects/src/main.o: libraries/stb_image.h libraries/stb_image_write.h
 
 objects/src/block.o: src/pixel.hpp
 
@@ -39,7 +42,7 @@ bin/test_block: objects/libraries/catch_amalgamated.o objects/src/pixel.o object
 
 .PHONY: run
 run: bin/main
-	./bin/main ./pictures/black.png
+	./bin/main ./input/black.png ./output/black.png
 
 .PHONY: test
 test: bin/test_pixel bin/test_block
