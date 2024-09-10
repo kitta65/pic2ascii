@@ -27,6 +27,6 @@ void Pixel::operator=(const Pixel& other) {
 void Pixel::Clear() {
   this->red_ = 0;
   this->green_ = 0;
-  this->blue_ = 0;
-  this->alpha_ = 0;
+  this->blue_ = 255;
+  this->alpha_ = 255;
 }

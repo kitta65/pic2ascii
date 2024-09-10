@@ -15,7 +15,7 @@
 using std::cin, std::cout, std::endl, std::cerr;
 
 const int kNumChannels = 4;
-const int kBlockWidth = 128;
+const int kBlockWidth = 4;
 const int kBlockHeight = kBlockWidth * 2;
 
 int main(int argc, char* argv[]) {
@@ -40,18 +40,18 @@ int main(int argc, char* argv[]) {
   unsigned char output_data[width * height * kNumChannels];
   std::copy(input_data, input_data + width * height * kNumChannels,
             output_data);
-  for (unsigned int block_y = 0; block_y < height / kBlockHeight; ++block_y) {
-    for (unsigned int block_x = 0; block_x < width / kBlockWidth; ++block_x) {
-      const int base_x = block_x * kBlockWidth;
-      const int base_y = block_y * kBlockHeight;
-      const int base_idx = (base_x + base_y * width) * kNumChannels;
+  for (auto block_y = 0u; block_y < height / kBlockHeight; ++block_y) {
+    for (auto block_x = 0u; block_x < width / kBlockWidth; ++block_x) {
+      const auto base_x = block_x * kBlockWidth;
+      const auto base_y = block_y * kBlockHeight;
+      const auto base_idx = (base_x + base_y * width) * kNumChannels;
 
       Pixel pixels[kBlockWidth * kBlockHeight];
-      for (unsigned int pixel_y = 0; pixel_y < kBlockHeight; ++pixel_y) {
-        int offset_idx = pixel_y * width * kNumChannels;
-        for (unsigned int pixel_x = 0; pixel_x < kBlockWidth; ++pixel_x) {
+      for (auto pixel_y = 0u; pixel_y < kBlockHeight; ++pixel_y) {
+        auto offset_idx = pixel_y * width * kNumChannels;
+        for (auto pixel_x = 0u; pixel_x < kBlockWidth; ++pixel_x) {
           pixels[pixel_x + pixel_y * kBlockWidth] =
-              Pixel(input_data[base_idx + offset_idx],
+              Pixel(input_data[base_idx + offset_idx + 0],
                     input_data[base_idx + offset_idx + 1],
                     input_data[base_idx + offset_idx + 2],
                     input_data[base_idx + offset_idx + 3]);
@@ -61,7 +61,18 @@ int main(int argc, char* argv[]) {
 
       Block block(kBlockWidth, kBlockHeight, pixels);
       block.Clear();
-      // TODO edit output_data
+
+      for (auto pixel_y = 0u; pixel_y < kBlockHeight; ++pixel_y) {
+        auto offset_idx = pixel_y * width * kNumChannels;
+        for (auto pixel_x = 0u; pixel_x < kBlockWidth; ++pixel_x) {
+          auto pixel = block[{pixel_x, pixel_y}];
+          auto idx = 0u;
+          output_data[base_idx + offset_idx + 0] = pixel.red;
+          output_data[base_idx + offset_idx + 1] = pixel.green;
+          output_data[base_idx + offset_idx + 2] = pixel.blue;
+          output_data[base_idx + offset_idx + 3] = pixel.alpha;
+        }
+      }
     }
   }
 
