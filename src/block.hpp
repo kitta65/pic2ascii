@@ -14,7 +14,7 @@ class Block {
 
  public:
   Block(unsigned int width, unsigned int height, Pixel pixels[]);
-  Pixel* operator[](XY xy);
+  Pixel& operator[](XY xy);
   void Clear();
 };
 

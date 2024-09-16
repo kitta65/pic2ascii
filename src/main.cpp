@@ -64,12 +64,12 @@ int main(int argc, char* argv[]) {
       for (auto pixel_y = 0u; pixel_y < kBlockHeight; ++pixel_y) {
         auto offset_idx = pixel_y * width * kNumChannels;
         for (auto pixel_x = 0u; pixel_x < kBlockWidth; ++pixel_x) {
-          Pixel* pixel = block[{pixel_x, pixel_y}];
-          pixel->Clear();
-          output_data[base_idx + offset_idx + 0] = pixel->red;
-          output_data[base_idx + offset_idx + 1] = pixel->green;
-          output_data[base_idx + offset_idx + 2] = pixel->blue;
-          output_data[base_idx + offset_idx + 3] = pixel->alpha;
+          Pixel pixel = block[{pixel_x, pixel_y}];
+          pixel.Clear();
+          output_data[base_idx + offset_idx + 0] = pixel.red;
+          output_data[base_idx + offset_idx + 1] = pixel.green;
+          output_data[base_idx + offset_idx + 2] = pixel.blue;
+          output_data[base_idx + offset_idx + 3] = pixel.alpha;
           offset_idx += kNumChannels;
         }
       }
