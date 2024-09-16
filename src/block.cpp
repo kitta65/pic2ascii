@@ -10,7 +10,7 @@ Block::Block(unsigned int width, unsigned int height, Pixel pixels[]) {
 
 Pixel& Block::operator[](XY xy) {
   if (this->width <= xy.x || this->height <= xy.y) {
-    throw std::out_of_range("out of range");
+    throw std::runtime_error("out of range");
   }
   unsigned int x = xy.x;
   unsigned int y = xy.y;
