@@ -7,11 +7,11 @@ Block::Block(unsigned int width, unsigned int height, Pixel pixels[]) {
   this->pixels = pixels;
 };
 
-Pixel& Block::operator[](XY xy) {
+Pixel* Block::operator[](XY xy) {
   // TODO check invalid access
   unsigned int x = xy.x;
   unsigned int y = xy.y;
-  return (this->pixels)[x + y * this->width];
+  return &(this->pixels)[x + y * this->width];
 }
 
 void Block::Clear() {

@@ -10,6 +10,7 @@ class Pixel {
 
  public:
   // read only members
+  // see https://stackoverflow.com/questions/5424042
   const unsigned char& red = red_;
   const unsigned char& green = green_;
   const unsigned char& blue = blue_;

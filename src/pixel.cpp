@@ -1,4 +1,5 @@
 #include "pixel.hpp"
+#include <iostream>
 
 Pixel::Pixel() {
   this->red_ = 0;
@@ -25,8 +26,8 @@ void Pixel::operator=(const Pixel& other) {
 }
 
 void Pixel::Clear() {
-  this->red_ = 0;
-  this->green_ = 0;
-  this->blue_ = 255;
-  this->alpha_ = 255;
+  this->red_ = 0u;
+  this->green_ = 0u;
+  this->blue_ = 0u;
+  this->alpha_ = 0u;
 }
