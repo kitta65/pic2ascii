@@ -1,5 +1,4 @@
 #include "pixel.hpp"
-#include <iostream>
 
 Pixel::Pixel() {
   this->red = 0;

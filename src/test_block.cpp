@@ -12,3 +12,9 @@ TEST_CASE("construct block") {
   REQUIRE(block[{0, 0}].blue == 3);
   REQUIRE(block[{0, 0}].alpha == 4);
 }
+
+TEST_CASE("operator[]") {
+  Pixel pixels[] = {};
+  Block block(0, 0, pixels);
+  REQUIRE_THROWS(block[{1, 1}]);
+}

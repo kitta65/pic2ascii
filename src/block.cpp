@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "pixel.hpp"
 #include "block.hpp"
 
@@ -8,7 +9,9 @@ Block::Block(unsigned int width, unsigned int height, Pixel pixels[]) {
 };
 
 Pixel& Block::operator[](XY xy) {
-  // TODO check invalid access
+  if (this->width <= xy.x || this->height <= xy.y) {
+    throw std::out_of_range("out of range");
+  }
   unsigned int x = xy.x;
   unsigned int y = xy.y;
   return (this->pixels)[x + y * this->width];
