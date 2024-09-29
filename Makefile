@@ -35,6 +35,7 @@ bin/%: objects/src/%.o
 	mkdir -p bin
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
+# NOTE check include statements in .cpp file
 bin/main: objects/src/pixel.o objects/src/block.o objects/src/png.o
 bin/test_png: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o objects/src/png.o
 bin/test_block: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o
