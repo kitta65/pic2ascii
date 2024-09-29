@@ -22,7 +22,6 @@ Pixel& Block::operator[](XY xy) {
 
 void Block::Clear() {
   for (unsigned int i = 0; i < this->width * this->height; ++i) {
-    Pixel p = (*pixels)[i];
-    p.Clear();
+    (*pixels)[i].Clear();
   }
 }
