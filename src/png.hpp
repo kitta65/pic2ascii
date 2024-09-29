@@ -7,9 +7,9 @@ class PNG {
   unsigned int height;
   unsigned char* data;
 
-  PNG(char* file);
+  PNG(const char* file);
   ~PNG();
-  void Save(char* file);
+  void Save(const char* file);
   bool ReadNthBlock(unsigned int index, Block& block);
   void WriteNthBlock(unsigned int index, Block& block);
 };

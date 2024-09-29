@@ -14,7 +14,7 @@
 
 const int kNumChannels = 4;
 
-PNG::PNG(char* file) {
+PNG::PNG(const char* file) {
   int width, height, _n;
 
   unsigned char* data = stbi_load(file, &width, &height, &_n, kNumChannels);
@@ -31,7 +31,7 @@ PNG::~PNG() {
   stbi_image_free(this->data);
 }
 
-void PNG::Save(char* file) {
+void PNG::Save(const char* file) {
   int result = stbi_write_png(file, this->width, this->height, kNumChannels,
                               this->data, this->width * kNumChannels);
   if (result == 0) {

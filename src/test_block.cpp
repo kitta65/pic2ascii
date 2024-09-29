@@ -1,7 +1,7 @@
 #include <vector>
+#include "../libraries/catch_amalgamated.hpp"
 #include "pixel.hpp"
 #include "block.hpp"
-#include "../libraries/catch_amalgamated.hpp"
 
 TEST_CASE("construct block") {
   auto pixels = std::vector<Pixel>(1);

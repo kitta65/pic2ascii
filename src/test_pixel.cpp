@@ -1,5 +1,5 @@
-#include "pixel.hpp"
 #include "../libraries/catch_amalgamated.hpp"
+#include "pixel.hpp"
 
 TEST_CASE("construct pixel by default constructor") {
   Pixel pixel;

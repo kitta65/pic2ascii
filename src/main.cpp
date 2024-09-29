@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
     std::cerr << "invalid arguments" << std::endl;
     return EXIT_FAILURE;
   }
-  char* input_file = argv[1];
-  char* output_file = argv[2];
+  const char* input_file = argv[1];
+  const char* output_file = argv[2];
 
   auto pixels = std::vector<Pixel>(kBlockWidth * kBlockHeight);
   auto block = Block(kBlockWidth, kBlockHeight, &pixels);
