@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 #include "pixel.hpp"
 #include "block.hpp"
@@ -17,15 +18,14 @@ int main(int argc, char* argv[]) {
   char* input_file = argv[1];
   char* output_file = argv[2];
 
+  auto pixels = std::vector<Pixel>(kBlockWidth * kBlockHeight);
+  auto block = Block(kBlockWidth, kBlockHeight, &pixels);
+
   // read and edit image
   PNG png(input_file);
-  for (auto i = 0u; true; ++i) {
-    auto block = png.GetNthBlock(i, kBlockWidth, kBlockHeight);
-    if (block.pixels == NULL) {
-      break;
-    }
+  for (auto idx = 0u; png.ReadNthBlock(idx, block); ++idx) {
     block.Clear();
-    png.SetNthBlock(i, block);
+    png.WriteNthBlock(idx, block);
   }
   png.Save(output_file);
 }

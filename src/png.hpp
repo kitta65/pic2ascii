@@ -10,8 +10,8 @@ class PNG {
   PNG(char* file);
   ~PNG();
   void Save(char* file);
-  Block GetNthBlock(unsigned int index, unsigned int width, unsigned int height);
-  void SetNthBlock(unsigned int index, Block& block);
+  bool ReadNthBlock(unsigned int index, Block& block);
+  void WriteNthBlock(unsigned int index, Block& block);
 };
 
 #endif

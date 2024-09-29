@@ -10,9 +10,9 @@ class Block {
  public:
   unsigned int width;
   unsigned int height;
-  Pixel* pixels;
+  std::vector<Pixel>* pixels;
 
-  Block(unsigned int width, unsigned int height, Pixel pixels[]);
+  Block(unsigned int width, unsigned int height, std::vector<Pixel>* pixels);
   Pixel& operator[](XY xy);
   void Clear();
 };
