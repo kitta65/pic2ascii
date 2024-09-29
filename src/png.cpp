@@ -41,13 +41,15 @@ void PNG::Save(const char* file) {
 };
 
 bool PNG::ReadNthBlock(unsigned int index, Block& block) {
-  const auto max_block_x = this->width / block.width;
-  const auto block_x = index % max_block_x;
-  const auto block_y = index / max_block_x;
-  const auto base_pixel_x = block_x * block.width;
-  const auto base_pixel_y = block_y * block.height;
+  auto max_block_x = this->width / block.width;
+  if (this->width % block.width == 0) {
+    --max_block_x;
+  }
+  const auto block_x = index % (max_block_x + 1);
+  const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
-      (base_pixel_x + base_pixel_y * this->width) * kNumChannels;
+      (block_x * block.width + block_y * block.height * this->width) *
+      kNumChannels;
 
   if (this->width * this->height * kNumChannels <= base_idx) {
     return false;
@@ -56,10 +58,16 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
   for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
     auto offset_idx = pixel_y * width * kNumChannels;
     for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
-      block[{pixel_x, pixel_y}] = Pixel(this->data[base_idx + offset_idx + 0],
-                                        this->data[base_idx + offset_idx + 1],
-                                        this->data[base_idx + offset_idx + 2],
-                                        this->data[base_idx + offset_idx + 3]);
+      if (this->width <= block_x * block.width + pixel_x ||
+          this->height <= block_y * block.height + pixel_y) {
+        block[{pixel_x, pixel_y}].Clear();
+      } else {
+        block[{pixel_x, pixel_y}] =
+            Pixel(this->data[base_idx + offset_idx + 0],
+                  this->data[base_idx + offset_idx + 1],
+                  this->data[base_idx + offset_idx + 2],
+                  this->data[base_idx + offset_idx + 3]);
+      }
       offset_idx += kNumChannels;
     }
   }
@@ -67,24 +75,29 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
 }
 
 void PNG::WriteNthBlock(unsigned int index, Block& block) {
-  const auto max_block_x = this->width / block.width;
-  const auto block_x = index % max_block_x;
-  const auto block_y = index / max_block_x;
-
-  const auto base_pixel_x = block_x * block.width;
-  const auto base_pixel_y = block_y * block.height;
+  auto max_block_x = this->width / block.width;
+  if (this->width % block.width == 0) {
+    --max_block_x;
+  }
+  const auto block_x = index % (max_block_x + 1);
+  const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
-      (base_pixel_x + base_pixel_y * this->width) * kNumChannels;
+      (block_x * block.width + block_y * block.height * this->width) *
+      kNumChannels;
 
   for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
     auto offset_idx = pixel_y * width * kNumChannels;
     for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
-      Pixel pixel = block[{pixel_x, pixel_y}];
-      pixel.Clear();
-      this->data[base_idx + offset_idx + 0] = pixel.red;
-      this->data[base_idx + offset_idx + 1] = pixel.green;
-      this->data[base_idx + offset_idx + 2] = pixel.blue;
-      this->data[base_idx + offset_idx + 3] = pixel.alpha;
+      if (this->width <= block_x * block.width + pixel_x ||
+          this->height <= block_y * block.height + pixel_y) {
+        continue;
+      } else {
+        Pixel& pixel = block[{pixel_x, pixel_y}];
+        this->data[base_idx + offset_idx + 0] = pixel.red;
+        this->data[base_idx + offset_idx + 1] = pixel.green;
+        this->data[base_idx + offset_idx + 2] = pixel.blue;
+        this->data[base_idx + offset_idx + 3] = pixel.alpha;
+      }
       offset_idx += kNumChannels;
     }
   }
