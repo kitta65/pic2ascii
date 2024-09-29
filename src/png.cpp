@@ -90,7 +90,7 @@ void PNG::WriteNthBlock(unsigned int index, Block& block) {
     for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
       if (this->width <= block_x * block.width + pixel_x ||
           this->height <= block_y * block.height + pixel_y) {
-        continue;
+        // NOP
       } else {
         Pixel& pixel = block[{pixel_x, pixel_y}];
         this->data[base_idx + offset_idx + 0] = pixel.red;
