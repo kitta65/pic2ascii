@@ -7,14 +7,14 @@ struct XY {
 };
 
 class Block {
- private:
-  unsigned int height;
-  unsigned int width;
-  Pixel* pixels;
-
  public:
-  Block(unsigned int height, unsigned int width, Pixel pixels[]);
+  unsigned int width;
+  unsigned int height;
+  std::vector<Pixel>* pixels;
+
+  Block(unsigned int width, unsigned int height, std::vector<Pixel>* pixels);
   Pixel& operator[](XY xy);
+  void Clear();
 };
 
 #endif

@@ -1,28 +1,30 @@
 #include <iostream>
+#include <vector>
 
-// see https://github.com/nothings/stb/blob/master/stb_image.h
-#define STB_IMAGE_IMPLEMENTATION
-#include "../libraries/stb_image.h"
+#include "pixel.hpp"
+#include "block.hpp"
+#include "png.hpp"
 
-using std::cin, std::cout, std::endl, std::cerr;
+const int kBlockWidth = 4;
+const int kBlockHeight = kBlockWidth * 2;
 
 int main(int argc, char* argv[]) {
   // handle CLI arguments
-  if (argc != 2) {
-    cerr << "invalid arguments" << endl;
+  if (argc != 3) {
+    std::cerr << "invalid arguments" << std::endl;
     return EXIT_FAILURE;
   }
-  char* filename = argv[1];
+  const char* input_file = argv[1];
+  const char* output_file = argv[2];
 
-  // load image data
-  int x, y, n;
-  unsigned char* data = stbi_load(filename, &x, &y, &n, 4);
-  if (data == NULL) {
-    cerr << "failed to load image" << endl;
-    return EXIT_FAILURE;
+  auto pixels = std::vector<Pixel>(kBlockWidth * kBlockHeight);
+  auto block = Block(kBlockWidth, kBlockHeight, &pixels);
+
+  // read and edit image
+  PNG png(input_file);
+  for (auto idx = 0u; png.ReadNthBlock(idx, block); ++idx) {
+    block.Clear();
+    png.WriteNthBlock(idx, block);
   }
-  cout << x << endl;
-  cout << y << endl;
-  cout << n << endl;
-  stbi_image_free(data);
+  png.Save(output_file);
 }
