@@ -25,6 +25,15 @@ int main(int argc, char* argv[]) {
   PNG png(input_file);
   for (auto idx = 0u; png.ReadNthBlock(idx, block); ++idx) {
     block.Clear();
+    if (idx == 0u) {
+      block.Draw(DASH);
+    }
+    if (idx == 1u) {
+      block.Draw(SLASH);
+    }
+    if (idx == 2u) {
+      block.Draw(PIPE);
+    }
     png.WriteNthBlock(idx, block);
   }
   png.Save(output_file);

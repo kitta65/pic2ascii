@@ -6,6 +6,12 @@ struct XY {
   unsigned int y;
 };
 
+enum Character {
+  DASH,
+  PIPE,
+  SLASH
+};
+
 class Block {
  public:
   unsigned int width;
@@ -13,8 +19,11 @@ class Block {
   std::vector<unsigned char>* pixels;
 
   Block(unsigned int width, unsigned int height, std::vector<unsigned char>* pixels);
+  void Draw(Character ch);
   unsigned char& operator[](XY xy);
   void Clear();
+  private:
+    void Line(float x0, float y0, float x1, float y1);
 };
 
 #endif
