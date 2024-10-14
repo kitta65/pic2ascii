@@ -1,6 +1,5 @@
 #include <stdexcept>
 #include <vector>
-#include "pixel.hpp"
 #include "block.hpp"
 
 Block::Block(unsigned int width,

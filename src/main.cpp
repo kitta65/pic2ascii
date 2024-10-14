@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 
-#include "pixel.hpp"
 #include "block.hpp"
 #include "png.hpp"
 

@@ -8,7 +8,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../libraries/stb_image_write.h"
 
-#include "pixel.hpp"
 #include "block.hpp"
 #include "png.hpp"
 
