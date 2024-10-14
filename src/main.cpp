@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 
-#include "pixel.hpp"
 #include "block.hpp"
 #include "png.hpp"
 
@@ -21,7 +20,7 @@ int main(int argc, char* argv[]) {
   const auto output_file = argv[2];
 
   // read and edit image
-  auto pixels = std::vector<Pixel>(blockWidth * (blockWidth * 2));
+  auto pixels = std::vector<unsigned char>(blockWidth * (blockWidth * 2));
   auto block = Block(blockWidth, blockWidth * 2, &pixels);
   PNG png(input_file);
   for (auto idx = 0u; png.ReadNthBlock(idx, block); ++idx) {

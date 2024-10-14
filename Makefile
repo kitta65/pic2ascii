@@ -26,9 +26,9 @@ objects/%.o: %.cpp
 	g++ -std=$(CPP_VERSION) -o $@ -c $<
 
 # NOTE check include statements in .cpp file
-objects/src/main.o: src/pixel.hpp src/block.hpp src/png.hpp
-objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/pixel.hpp src/block.hpp src/png.hpp
-objects/src/block.o: src/pixel.hpp src/block.hpp
+objects/src/main.o: src/block.hpp src/png.hpp
+objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/block.hpp src/png.hpp
+objects/src/block.o: src/block.hpp
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
 bin/%: objects/src/%.o
@@ -36,18 +36,16 @@ bin/%: objects/src/%.o
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
 # NOTE check include statements in .cpp file
-bin/main: objects/src/pixel.o objects/src/block.o objects/src/png.o
-bin/test_png: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o objects/src/png.o
-bin/test_block: objects/libraries/catch_amalgamated.o objects/src/pixel.o objects/src/block.o
-bin/test_pixel: objects/libraries/catch_amalgamated.o objects/src/pixel.o
+bin/main: objects/src/block.o objects/src/png.o
+bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
+bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
 
 .PHONY: run
 run: bin/main
 	./bin/main ./input/black.png ./output/black.png 8
 
 .PHONY: test
-test: bin/test_pixel bin/test_block bin/test_png
-	./bin/test_pixel
+test: bin/test_block bin/test_png
 	./bin/test_block
 	./bin/test_png
 

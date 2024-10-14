@@ -8,7 +8,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../libraries/stb_image_write.h"
 
-#include "pixel.hpp"
 #include "block.hpp"
 #include "png.hpp"
 
@@ -60,13 +59,12 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
     for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
       if (this->width <= block_x * block.width + pixel_x ||
           this->height <= block_y * block.height + pixel_y) {
-        block[{pixel_x, pixel_y}].Clear();
+        block[{pixel_x, pixel_y}] = 255;
       } else {
-        block[{pixel_x, pixel_y}] =
-            Pixel(this->data[base_idx + offset_idx + 0],
-                  this->data[base_idx + offset_idx + 1],
-                  this->data[base_idx + offset_idx + 2],
-                  this->data[base_idx + offset_idx + 3]);
+        auto grayscale = 0.299 * this->data[base_idx + offset_idx + 0] +
+                         0.587 * this->data[base_idx + offset_idx + 1] +
+                         0.114 * this->data[base_idx + offset_idx + 2];
+        block[{pixel_x, pixel_y}] = grayscale;
       }
       offset_idx += kNumChannels;
     }
@@ -92,11 +90,11 @@ void PNG::WriteNthBlock(unsigned int index, Block& block) {
           this->height <= block_y * block.height + pixel_y) {
         // NOP
       } else {
-        Pixel& pixel = block[{pixel_x, pixel_y}];
-        this->data[base_idx + offset_idx + 0] = pixel.red;
-        this->data[base_idx + offset_idx + 1] = pixel.green;
-        this->data[base_idx + offset_idx + 2] = pixel.blue;
-        this->data[base_idx + offset_idx + 3] = pixel.alpha;
+        unsigned char grayscale = block[{pixel_x, pixel_y}];
+        this->data[base_idx + offset_idx + 0] = grayscale;
+        this->data[base_idx + offset_idx + 1] = grayscale;
+        this->data[base_idx + offset_idx + 2] = grayscale;
+        this->data[base_idx + offset_idx + 3] = grayscale <= 127 ? 255 : 0;
       }
       offset_idx += kNumChannels;
     }
