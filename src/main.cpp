@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
   for (auto idx = 0u; png.ReadNthBlock(idx, block); ++idx) {
     block.Clear();
     if (idx == 0u) {
-      block.Draw(DASH);
+      block.Draw(BACKSLASH);
     }
     if (idx == 1u) {
       block.Draw(SLASH);

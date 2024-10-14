@@ -7,6 +7,7 @@ struct XY {
 };
 
 enum Character {
+  BACKSLASH,
   DASH,
   PIPE,
   SLASH

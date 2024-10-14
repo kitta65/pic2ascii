@@ -31,6 +31,9 @@ void Block::Draw(Character ch) {
   Block::Clear();
 
   switch (ch) {
+    case BACKSLASH:
+      Block::Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
+      break;
     case DASH:
       Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
       break;
