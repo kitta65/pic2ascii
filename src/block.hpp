@@ -6,15 +6,26 @@ struct XY {
   unsigned int y;
 };
 
+enum Character { BACKSLASH, DASH, PIPE, SLASH };
+
 class Block {
  public:
   unsigned int width;
   unsigned int height;
   std::vector<unsigned char>* pixels;
 
-  Block(unsigned int width, unsigned int height, std::vector<unsigned char>* pixels);
-  unsigned char& operator[](XY xy);
+  Block(unsigned int width,
+        unsigned int height,
+        std::vector<unsigned char>* pixels);
+  void Draw(Character ch);
+  unsigned char& operator[](XY xy);  // NOTE (0, 0) is top-left
   void Clear();
+
+ private:
+  void Line(float x0,
+            float y0,
+            float x1,
+            float y1);  // NOTE (0, 0) is bottom-left
 };
 
 #endif
