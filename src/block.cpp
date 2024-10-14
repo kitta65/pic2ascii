@@ -54,11 +54,11 @@ void Block::Draw(Character ch) {
   }
 }
 
-void Block::Line(float x0, float y0, float x1, float y1) {
+void Block::Line(float x1, float y1, float x2, float y2) {
   // line1 (a1x+b1y+c1=0) is the line to draw
-  const float a1 = y1 - y0;
-  const float b1 = x0 - x1;
-  const float c1 = x1 * y0 - x0 * y1;
+  const float a1 = y2 - y1;
+  const float b1 = x1 - x2;
+  const float c1 = x2 * y1 - x1 * y2;
 
   for (unsigned int x_ = 0; x_ < this->width; ++x_) {
     float x = static_cast<float>(x_) / this->width;
@@ -82,8 +82,8 @@ void Block::Line(float x0, float y0, float x1, float y1) {
       // point (p, q) is the intersection of line1 and line2
       float p = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
       float q = (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1);
-      if ((p < x0 && p < x1) || (x0 < p && x1 < p) || (q < y0 && q < y1) ||
-          (y0 < q && y1 < q)) {
+      if ((p < x1 && p < x2) || (x1 < p && x2 < p) || (q < y1 && q < y2) ||
+          (y1 < q && y2 < q)) {
         continue;
       }
 

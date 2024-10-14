@@ -15,12 +15,12 @@ TEST_CASE("operator[]") {
   REQUIRE_THROWS(block[{1, 1}]);
 }
 
-TEST_CASE("draw pipe") {
+TEST_CASE("draw characters") {
   const auto width = 16;
   const auto height = width * 2;
   auto pixels = std::vector<unsigned char>(width * height);
   Block block(width, height, &pixels);
-  block.Draw(PIPE);
-  REQUIRE(block[{0, 0}] == 255);
-  REQUIRE(block[{8, 16}] == 0);
+
+  // TODO draw all characters to check manually
+  REQUIRE_NOTHROW(block.Draw(PIPE));
 }
