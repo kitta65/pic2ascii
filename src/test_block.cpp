@@ -25,3 +25,17 @@ TEST_CASE("draw characters") {
     REQUIRE_NOTHROW(block.Draw(c));
   }
 }
+
+TEST_CASE("ssim fail") {
+  const unsigned int width_a = 16;
+  const unsigned int height_a = width_a * 2;
+  auto pixels_a = std::vector<unsigned char>(width_a * height_a);
+  Block block_a(width_a, height_a, &pixels_a);
+
+  const unsigned int width_b = 8;
+  const unsigned int height_b = width_b * 2;
+  auto pixels_b = std::vector<unsigned char>(width_b * height_b);
+  Block block_b(width_b, height_b, &pixels_b);
+
+  REQUIRE_THROWS(block_a.SSIM(block_b));
+}

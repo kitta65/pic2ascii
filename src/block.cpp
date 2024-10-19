@@ -91,3 +91,11 @@ void Block::Line(float x1, float y1, float x2, float y2) {
     }
   }
 }
+
+float Block::SSIM(Block other) {
+  if (this -> width != other.width || this->height != other.width) {
+    throw std::runtime_error("the size of blocks does not match");
+  }
+
+  return 0.0;
+}
