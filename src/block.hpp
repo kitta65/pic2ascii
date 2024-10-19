@@ -6,7 +6,10 @@ struct XY {
   unsigned int y;
 };
 
-enum Character { BACKSLASH, DASH, PIPE, SLASH };
+#define ALL_CHARACTERS {BACKSLASH, DASH, PIPE, SLASH}
+enum Character ALL_CHARACTERS;
+const Character kAllCharacters[] = ALL_CHARACTERS;
+#undef ALL_CHARACTERS
 
 class Block {
  public:
