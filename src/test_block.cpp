@@ -21,6 +21,7 @@ TEST_CASE("draw characters") {
   auto pixels = std::vector<unsigned char>(width * height);
   Block block(width, height, &pixels);
 
-  // TODO draw all characters to check manually
-  REQUIRE_NOTHROW(block.Draw(PIPE));
+  for (auto c : kAllCharacters) {
+    REQUIRE_NOTHROW(block.Draw(c));
+  }
 }

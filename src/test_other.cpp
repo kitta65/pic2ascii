@@ -19,5 +19,6 @@ TEST_CASE("draw all characters") {
     png.WriteNthBlock(idx, block);
   }
 
+  // manually verify output image
   png.Save("output/test_other_draw_all_characters.png");
 }
