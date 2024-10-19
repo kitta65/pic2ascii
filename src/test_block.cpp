@@ -26,7 +26,7 @@ TEST_CASE("draw characters") {
   }
 }
 
-TEST_CASE("ssim fail") {
+TEST_CASE("MSSIM fail") {
   const unsigned int width_a = 16;
   const unsigned int height_a = width_a * 2;
   auto pixels_a = std::vector<unsigned char>(width_a * height_a);
@@ -37,5 +37,37 @@ TEST_CASE("ssim fail") {
   auto pixels_b = std::vector<unsigned char>(width_b * height_b);
   Block block_b(width_b, height_b, &pixels_b);
 
-  REQUIRE_THROWS(block_a.SSIM(block_b));
+  REQUIRE_THROWS(block_a.MSSIM(block_b));
+}
+
+TEST_CASE("MSSIM 1.0") {
+  const unsigned int width = 16;
+  const unsigned int height = width * 2;
+  auto pixels_x = std::vector<unsigned char>(width * height);
+  auto pixels_y = std::vector<unsigned char>(width * height);
+  Block block_x(width, height, &pixels_x);
+  Block block_y(width, height, &pixels_y);
+  for (auto idx = 0; idx < width * height; ++idx) {
+    pixels_x[idx] = 0;
+    pixels_y[idx] = 0;
+  }
+
+  auto mssim = block_x.MSSIM(block_y);
+  REQUIRE_THAT(mssim, Catch::Matchers::WithinAbs(1.0, 0.001));
+}
+
+TEST_CASE("MSSIM 0.0") {
+  const unsigned int width = 16;
+  const unsigned int height = width * 2;
+  auto pixels_x = std::vector<unsigned char>(width * height);
+  auto pixels_y = std::vector<unsigned char>(width * height);
+  Block block_x(width, height, &pixels_x);
+  Block block_y(width, height, &pixels_y);
+  for (auto idx = 0; idx < width * height; ++idx) {
+    pixels_x[idx] = 0;
+    pixels_y[idx] = 255;
+  }
+
+  auto mssim = block_x.MSSIM(block_y);
+  REQUIRE_THAT(mssim, Catch::Matchers::WithinAbs(0.0, 0.001));
 }

@@ -23,7 +23,7 @@ class Block {
   void Draw(Character ch);
   unsigned char& operator[](XY xy);  // NOTE (0, 0) is top-left
   void Clear();
-  float SSIM(Block other);
+  float MSSIM(Block& other);  // structural similarity index measure
 
  private:
   void Line(float x1,

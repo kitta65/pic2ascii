@@ -92,10 +92,39 @@ void Block::Line(float x1, float y1, float x2, float y2) {
   }
 }
 
-float Block::SSIM(Block other) {
-  if (this -> width != other.width || this->height != other.width) {
+float Block::MSSIM(Block& other) {
+  if (this->width != other.width || this->height != other.height) {
     throw std::runtime_error("the size of blocks does not match");
   }
 
-  return 0.0;
+  const float k1 = 0.01;
+  const float k2 = 0.03;
+  const float c1 = sq(k1 * 255);
+  const float c2 = sq(k2 * 255);
+
+  float total = 0.0;
+  unsigned int sample = 0;
+  for (unsigned int w = 0; w < this->width; ++w) {
+    for (unsigned int h = 0; h < this->height; ++h) {
+      // TODO skip edge if needed
+
+      float x = (*this)[{w, h}];
+      float y = other[{w, h}];
+
+      float mu_x2 = sq(x);
+      float mu_y2 = sq(y);
+      float mu_xy = x * y;
+
+      float sigma_x2 = mu_x2 - sq(x);
+      float sigma_y2 = mu_y2 - sq(y);
+      float sigma_xy = mu_xy - x * y;
+
+      float ssim = ((2 * mu_xy + c1) * (sigma_xy + c2)) /
+                   ((mu_x2 + mu_y2 + c1) * (sigma_x2 + sigma_y2 + c2));
+      total += ssim;
+      ++sample;
+    }
+  }
+
+  return total / sample;
 }
