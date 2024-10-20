@@ -14,8 +14,7 @@ TEST_CASE("ReadNthBlock remainder == 0") {
   const auto height = 8u;
 
   auto png = PNG("./input/black.png");
-  auto pixels = std::vector<unsigned char>(width * height);
-  auto block = Block(width, height, &pixels);
+  auto block = Block(width, height);
   auto idx = 0u;
   while (png.ReadNthBlock(idx, block)) {
     ++idx;
@@ -29,8 +28,7 @@ TEST_CASE("ReadNthBlock remainder != 0") {
   const auto height = 10u;
 
   auto png = PNG("./input/black.png");
-  auto pixels = std::vector<unsigned char>(width * height);
-  auto block = Block(width, height, &pixels);
+  auto block = Block(width, height);
   auto idx = 0u;
   while (png.ReadNthBlock(idx, block)) {
     ++idx;
@@ -46,7 +44,6 @@ TEST_CASE("ReadNthBlock out of range") {
   const auto height = 16u;
 
   auto png = PNG("./input/black.png");
-  auto pixels = std::vector<unsigned char>(width * height);
-  auto block = Block(width, height, &pixels);
+  auto block = Block(width, height);
   REQUIRE_FALSE(png.ReadNthBlock(1000, block));
 }

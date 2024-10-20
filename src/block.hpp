@@ -15,17 +15,15 @@ class Block {
  public:
   unsigned int width;
   unsigned int height;
-  std::vector<unsigned char>* pixels;
 
-  Block(unsigned int width,
-        unsigned int height,
-        std::vector<unsigned char>* pixels);
+  Block(unsigned int width, unsigned int height);
   void Draw(Character ch);
   unsigned char& operator[](XY xy);  // NOTE (0, 0) is top-left
   void Clear();
   float MSSIM(Block& other);  // structural similarity index measure
 
  private:
+  std::vector<unsigned char> pixels;
   void Line(float x1,
             float y1,
             float x2,

@@ -5,8 +5,7 @@
 
 TEST_CASE("draw all characters") {
   const unsigned int blockWidth = 128;
-  auto pixels = std::vector<unsigned char>(blockWidth * (blockWidth * 2));
-  auto block = Block(blockWidth, blockWidth * 2, &pixels);
+  auto block = Block(blockWidth, blockWidth * 2);
   PNG png("input/white.png");
   const unsigned int n = sizeof(kAllCharacters) / sizeof(*kAllCharacters);
 

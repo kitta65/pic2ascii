@@ -2,20 +2,17 @@
 #include <vector>
 #include "block.hpp"
 
-// 1.0 means the width of Block
-const float kLineThickness = 0.2;
+const float kLineThickness = 0.2;  // 1.0 is the width of Block
 
 float sq(float f) {
   return f * f;
 }
 
 // TODO since height is always width*2, height argument is not needed
-Block::Block(unsigned int width,
-             unsigned int height,
-             std::vector<unsigned char>* pixels) {
+Block::Block(unsigned int width, unsigned int height) {
   this->width = width;
   this->height = height;
-  this->pixels = pixels;
+  this->pixels = std::vector<unsigned char>(width * height);
 };
 
 unsigned char& Block::operator[](XY xy) {
@@ -24,12 +21,12 @@ unsigned char& Block::operator[](XY xy) {
   }
   unsigned int x = xy.x;
   unsigned int y = xy.y;
-  return (*(this->pixels))[x + y * this->width];
+  return this->pixels[x + y * this->width];
 }
 
 void Block::Clear() {
   for (unsigned int i = 0; i < this->width * this->height; ++i) {
-    (*pixels)[i] = 255;
+    pixels[i] = 255;
   }
 }
 
