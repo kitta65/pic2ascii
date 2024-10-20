@@ -8,10 +8,9 @@ float sq(float f) {
   return f * f;
 }
 
-// TODO since height is always width*2, height argument is not needed
-Block::Block(unsigned int width, unsigned int height) {
+Block::Block(unsigned int width) {
   this->width = width;
-  this->height = height;
+  this->height = width * 2;
   this->pixels = std::vector<unsigned char>(width * height);
 };
 

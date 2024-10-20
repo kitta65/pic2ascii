@@ -16,7 +16,7 @@ class Block {
   unsigned int width;
   unsigned int height;
 
-  Block(unsigned int width, unsigned int height);
+  Block(unsigned int width);
   void Draw(Character ch);
   unsigned char& operator[](XY xy);  // NOTE (0, 0) is top-left
   void Clear();
