@@ -43,7 +43,7 @@ bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
 
 .PHONY: run
 run: bin/main
-	./bin/main ./input/black.png ./output/makefile_run.png 16
+	./bin/main ./input/black.png ./output/makefile_run.png --block_width=16
 
 .PHONY: test
 test: bin/test_block bin/test_png bin/test_other
