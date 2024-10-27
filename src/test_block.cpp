@@ -6,6 +6,7 @@ TEST_CASE("construct block") {
   Block block(12);
   REQUIRE(block.width == 12);
   REQUIRE(block.height == 24);
+  REQUIRE(block.filter_size == 3);
 }
 
 TEST_CASE("operator[]") {

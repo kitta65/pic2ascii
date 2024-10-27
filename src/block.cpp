@@ -131,7 +131,7 @@ float Block::MSSIM(Block& other) {
 
   float total = 0.0;
   unsigned int sample = 0;
-  // TODO DLY
+  // TODO DRY
   auto filter_size = this->filter_size;
   auto filter_offset = (filter_size - 1) / 2;  // >= 0
 

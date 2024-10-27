@@ -4,7 +4,7 @@
 #include "png.hpp"
 
 TEST_CASE("draw all characters") {
-  auto block = Block(123);
+  auto block = Block(128);
   PNG png("input/white.png");
   const unsigned int n = sizeof(kAllCharacters) / sizeof(*kAllCharacters);
 
