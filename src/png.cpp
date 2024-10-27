@@ -60,6 +60,8 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
       if (this->width <= block_x * block.width + pixel_x ||
           this->height <= block_y * block.height + pixel_y) {
         block[{pixel_x, pixel_y}] = 255;
+      } else if (this->data[base_idx + 3] <= 127) {  // if transparent
+        block[{pixel_x, pixel_y}] = 255;
       } else {
         auto grayscale = 0.299 * this->data[base_idx + offset_idx + 0] +
                          0.587 * this->data[base_idx + offset_idx + 1] +

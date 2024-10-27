@@ -2,34 +2,40 @@
 #include <vector>
 #include "block.hpp"
 
-// 1.0 means the width of Block
-const float kLineThickness = 0.2;
+const float kLineThickness = 0.2;  // 1.0 is the width of Block
 
 float sq(float f) {
   return f * f;
 }
 
-// TODO since height is always width*2, height argument is not needed
-Block::Block(unsigned int width,
-             unsigned int height,
-             std::vector<unsigned char>* pixels) {
+Block::Block(unsigned int width) {
+  if (width <= 0) {
+    throw std::logic_error("width should be greater than 0");
+  }
+
   this->width = width;
-  this->height = height;
-  this->pixels = pixels;
+  this->height = width * 2;
+  this->pixels = std::vector<unsigned int>(width * height);
+
+  unsigned int filter_size = width / 4;
+  if (filter_size % 2 == 0) {
+    filter_size += 1;  // should be odd number
+  }
+  this->filter_size = filter_size;
 };
 
-unsigned char& Block::operator[](XY xy) {
+unsigned int& Block::operator[](XY xy) {
   if (this->width <= xy.x || this->height <= xy.y) {
     throw std::runtime_error("out of range");
   }
   unsigned int x = xy.x;
   unsigned int y = xy.y;
-  return (*(this->pixels))[x + y * this->width];
+  return this->pixels[x + y * this->width];
 }
 
 void Block::Clear() {
   for (unsigned int i = 0; i < this->width * this->height; ++i) {
-    (*pixels)[i] = 255;
+    pixels[i] = 255;
   }
 }
 
@@ -90,4 +96,88 @@ void Block::Line(float x1, float y1, float x2, float y2) {
       (*this)[{x_, y_}] = 0;
     }
   }
+}
+
+Block Block::Filter() {
+  Block block(this->width);
+  auto filter_size = this->filter_size;
+  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+
+  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+      // calculate average in the window
+      unsigned int sum = 0u;
+      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
+        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
+          sum += (*this)[{x, y}];
+        }
+      }
+      block[{w, h}] = sum / (filter_size * filter_size);
+    }
+  }
+
+  return block;
+}
+
+float Block::MSSIM(Block& other) {
+  if (this->width != other.width || this->height != other.height) {
+    throw std::runtime_error("the size of blocks does not match");
+  }
+
+  const float k1 = 0.01;
+  const float k2 = 0.03;
+  const float c1 = sq(k1 * 255);
+  const float c2 = sq(k2 * 255);
+
+  float total = 0.0;
+  unsigned int sample = 0;
+  // TODO DRY
+  auto filter_size = this->filter_size;
+  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+
+  auto this_sq = Block(this->width);
+  for (auto w = 0u; w < this->width; ++w) {
+    for (auto h = 0u; h < this->height; ++h) {
+      this_sq[{w, h}] = (*this)[{w, h}] * (*this)[{w, h}];
+    }
+  }
+  auto other_sq = Block(this->width);
+  for (auto w = 0u; w < this->width; ++w) {
+    for (auto h = 0u; h < this->height; ++h) {
+      other_sq[{w, h}] = other[{w, h}] * other[{w, h}];
+    }
+  }
+  auto maltiplied = Block(this->width);
+  for (auto w = 0u; w < this->width; ++w) {
+    for (auto h = 0u; h < this->height; ++h) {
+      maltiplied[{w, h}] = (*this)[{w, h}] * other[{w, h}];
+    }
+  }
+  auto filtered_this = this->Filter();
+  auto filtered_other = other.Filter();
+  auto filtered_this_sq = this_sq.Filter();
+  auto filtered_other_sq = other_sq.Filter();
+  auto filtered_maltiplied = maltiplied.Filter();
+
+  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+      float x = filtered_this[{w, h}];
+      float y = filtered_other[{w, h}];
+
+      float mu_x2 = filtered_this_sq[{w, h}];
+      float mu_y2 = filtered_other_sq[{w, h}];
+      float mu_xy = filtered_maltiplied[{w, h}];
+
+      float sigma_x2 = mu_x2 - sq(x);
+      float sigma_y2 = mu_y2 - sq(y);
+      float sigma_xy = mu_xy - x * y;
+
+      float ssim = ((2 * x * y + c1) * (2 * sigma_xy + c2)) /
+                   ((sq(x) + sq(y) + c1) * (sigma_x2 + sigma_y2 + c2));
+      total += ssim;
+      ++sample;
+    }
+  }
+
+  return total / sample;
 }
