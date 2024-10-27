@@ -9,9 +9,19 @@ float sq(float f) {
 }
 
 Block::Block(unsigned int width) {
+  if (width <= 0) {
+    throw std::logic_error("width should be greater than 0");
+  }
+
   this->width = width;
   this->height = width * 2;
   this->pixels = std::vector<unsigned char>(width * height);
+
+  unsigned int filter_size = width / 4;
+  if (filter_size % 2 == 0) {
+    filter_size += 1;  // should be odd number
+  }
+  this->filter_size = filter_size;
 };
 
 unsigned char& Block::operator[](XY xy) {
@@ -86,6 +96,27 @@ void Block::Line(float x1, float y1, float x2, float y2) {
       (*this)[{x_, y_}] = 0;
     }
   }
+}
+
+Block Block::Filter() {
+  Block block(this->width);
+  auto filter_size = this->filter_size;
+  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+
+  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+      // calculate average in the window
+      unsigned int sum = 0u;
+      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
+        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
+          sum += (*this)[{x, y}];
+        }
+      }
+      block[{w, h}] = sum / (filter_size * filter_size);
+    }
+  }
+
+  return block;
 }
 
 float Block::MSSIM(Block& other) {

@@ -3,9 +3,9 @@
 #include "block.hpp"
 
 TEST_CASE("construct block") {
-  Block block(1);
-  REQUIRE(block.width == 1);
-  REQUIRE(block.height == 2);
+  Block block(12);
+  REQUIRE(block.width == 12);
+  REQUIRE(block.height == 24);
 }
 
 TEST_CASE("operator[]") {
@@ -20,6 +20,16 @@ TEST_CASE("draw characters") {
   for (auto c : kAllCharacters) {
     REQUIRE_NOTHROW(block.Draw(c));
   }
+}
+
+TEST_CASE("filter") {
+  Block original(12);  // filter_size should be 3
+  original.Clear();
+  original[{1, 1}] = 255 - 18;
+
+  auto filtered = original.Filter();
+  unsigned int expected = filtered[{1, 1}];
+  REQUIRE(expected == 255 - 2);
 }
 
 TEST_CASE("MSSIM fail") {
