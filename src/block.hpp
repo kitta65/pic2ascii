@@ -15,6 +15,7 @@ class Block {
  public:
   unsigned int width;
   unsigned int height;
+  unsigned int filter_size;
 
   Block(unsigned int width);
   unsigned int& operator[](XY xy);  // NOTE (0, 0) is top-left
@@ -25,7 +26,6 @@ class Block {
 
  private:
   std::vector<unsigned int> pixels;
-  unsigned int filter_size;
   void Line(float x1,
             float y1,
             float x2,

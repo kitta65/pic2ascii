@@ -135,6 +135,18 @@ float Block::MSSIM(Block& other) {
   auto filter_size = this->filter_size;
   auto filter_offset = (filter_size - 1) / 2;  // >= 0
 
+  auto this_sq = Block(this->width);
+  for (auto w = 0u; w < this->width; ++w) {
+    for (auto h = 0u; h < this->height; ++h) {
+      this_sq[{w, h}] = (*this)[{w, h}] * (*this)[{w, h}];
+    }
+  }
+  auto other_sq = Block(this->width);
+  for (auto w = 0u; w < this->width; ++w) {
+    for (auto h = 0u; h < this->height; ++h) {
+      other_sq[{w, h}] = other[{w, h}] * other[{w, h}];
+    }
+  }
   auto maltiplied = Block(this->width);
   for (auto w = 0u; w < this->width; ++w) {
     for (auto h = 0u; h < this->height; ++h) {
@@ -143,6 +155,8 @@ float Block::MSSIM(Block& other) {
   }
   auto filtered_this = this->Filter();
   auto filtered_other = other.Filter();
+  auto filtered_this_sq = this_sq.Filter();
+  auto filtered_other_sq = other_sq.Filter();
   auto filtered_maltiplied = maltiplied.Filter();
 
   for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
@@ -150,16 +164,16 @@ float Block::MSSIM(Block& other) {
       float x = filtered_this[{w, h}];
       float y = filtered_other[{w, h}];
 
-      float mu_x2 = sq(x);
-      float mu_y2 = sq(y);
+      float mu_x2 = filtered_this_sq[{w, h}];
+      float mu_y2 = filtered_other_sq[{w, h}];
       float mu_xy = filtered_maltiplied[{w, h}];
 
       float sigma_x2 = mu_x2 - sq(x);
       float sigma_y2 = mu_y2 - sq(y);
       float sigma_xy = mu_xy - x * y;
 
-      float ssim = ((2 * mu_xy + c1) * (sigma_xy + c2)) /
-                   ((mu_x2 + mu_y2 + c1) * (sigma_x2 + sigma_y2 + c2));
+      float ssim = ((2 * x * y + c1) * (2 * sigma_xy + c2)) /
+                   ((sq(x) + sq(y) + c1) * (sigma_x2 + sigma_y2 + c2));
       total += ssim;
       ++sample;
     }
