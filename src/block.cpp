@@ -15,7 +15,7 @@ Block::Block(unsigned int width) {
 
   this->width = width;
   this->height = width * 2;
-  this->pixels = std::vector<unsigned char>(width * height);
+  this->pixels = std::vector<unsigned int>(width * height);
 
   unsigned int filter_size = width / 4;
   if (filter_size % 2 == 0) {
@@ -24,7 +24,7 @@ Block::Block(unsigned int width) {
   this->filter_size = filter_size;
 };
 
-unsigned char& Block::operator[](XY xy) {
+unsigned int& Block::operator[](XY xy) {
   if (this->width <= xy.x || this->height <= xy.y) {
     throw std::runtime_error("out of range");
   }
@@ -131,16 +131,28 @@ float Block::MSSIM(Block& other) {
 
   float total = 0.0;
   unsigned int sample = 0;
-  for (unsigned int w = 0; w < this->width; ++w) {
-    for (unsigned int h = 0; h < this->height; ++h) {
-      // TODO skip edge if needed
+  // TODO DLY
+  auto filter_size = this->filter_size;
+  auto filter_offset = (filter_size - 1) / 2;  // >= 0
 
-      float x = (*this)[{w, h}];
-      float y = other[{w, h}];
+  auto maltiplied = Block(this->width);
+  for (auto w = 0u; w < this->width; ++w) {
+    for (auto h = 0u; h < this->height; ++h) {
+      maltiplied[{w, h}] = (*this)[{w, h}] * other[{w, h}];
+    }
+  }
+  auto filtered_this = this->Filter();
+  auto filtered_other = other.Filter();
+  auto filtered_maltiplied = maltiplied.Filter();
+
+  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+      float x = filtered_this[{w, h}];
+      float y = filtered_other[{w, h}];
 
       float mu_x2 = sq(x);
       float mu_y2 = sq(y);
-      float mu_xy = x * y;
+      float mu_xy = filtered_maltiplied[{w, h}];
 
       float sigma_x2 = mu_x2 - sq(x);
       float sigma_y2 = mu_y2 - sq(y);
