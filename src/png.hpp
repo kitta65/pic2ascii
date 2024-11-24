@@ -11,7 +11,9 @@ class PNG {
   ~PNG();
   void Save(const char* file);
   bool ReadNthBlock(unsigned int index, Block& block);
+  bool ReadNthBlock(unsigned int x, unsigned int y, Block& block);
   void WriteNthBlock(unsigned int index, Block& block);
+  void WriteNthBlock(unsigned int x, unsigned int y, Block& block);
 };
 
 #endif

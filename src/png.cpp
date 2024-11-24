@@ -74,6 +74,19 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
   return true;
 }
 
+bool PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
+  auto max_block_x = this->width / block.width;
+  if (this->width % block.width == 0) {
+    --max_block_x;
+  }
+
+  if (max_block_x < x) {
+    return false;
+  }
+
+  return PNG::ReadNthBlock(x + (max_block_x + 1) * y, block);
+}
+
 void PNG::WriteNthBlock(unsigned int index, Block& block) {
   auto max_block_x = this->width / block.width;
   if (this->width % block.width == 0) {
@@ -101,4 +114,16 @@ void PNG::WriteNthBlock(unsigned int index, Block& block) {
       offset_idx += kNumChannels;
     }
   }
+}
+
+void PNG::WriteNthBlock(unsigned int x, unsigned int y, Block& block) {
+  auto max_block_x = this->width / block.width;
+  if (this->width % block.width == 0) {
+    --max_block_x;
+  }
+
+  if (max_block_x < x) {
+    throw std::runtime_error("out of range");
+  }
+  PNG::WriteNthBlock(x, block);
 }
