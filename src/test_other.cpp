@@ -11,7 +11,7 @@ TEST_CASE("draw all characters") {
   // if this assertion fails, you should prepare larger image
   REQUIRE(png.ReadNthBlock(n, block));
 
-  for (auto idx = 0; idx < n; ++idx) {
+  for (auto idx = 0u; idx < n; ++idx) {
     png.ReadNthBlock(idx, block);
     REQUIRE_NOTHROW(block.Draw(kAllCharacters[idx]));
     png.WriteNthBlock(idx, block);
