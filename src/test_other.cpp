@@ -8,7 +8,7 @@ TEST_CASE("draw all characters") {
   PNG png("input/white.png");
   const unsigned int n = sizeof(kAllCharacters) / sizeof(*kAllCharacters);
 
-  // if this assertion failse, you should prepare larger image
+  // if this assertion fails, you should prepare larger image
   REQUIRE(png.ReadNthBlock(n, block));
 
   for (auto idx = 0; idx < n; ++idx) {
