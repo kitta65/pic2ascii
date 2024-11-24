@@ -79,6 +79,9 @@ int main(int argc, char* argv[]) {
         case SLASH:
           std::cout << "/";
           break;
+        case SPACE:
+          std::cout << " ";
+          break;
       }
 
       if (output_file != NULL) {

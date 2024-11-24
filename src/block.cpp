@@ -2,7 +2,7 @@
 #include <vector>
 #include "block.hpp"
 
-const float kLineThickness = 0.2;  // 1.0 is the width of Block
+const float kLineThickness = 0.1;  // 1.0 is the width of Block
 
 float sq(float f) {
   return f * f;
@@ -54,6 +54,8 @@ void Block::Draw(Character ch) {
       break;
     case SLASH:
       Block::Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
+      break;
+    case SPACE:
       break;
     default:
       throw std::logic_error("not implemented");
