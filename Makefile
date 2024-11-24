@@ -23,7 +23,7 @@ libraries/catch_amalgamated.cpp: libraries
 objects/%.o: %.cpp
 	mkdir -p objects/src
 	mkdir -p objects/libraries
-	g++ -std=$(CPP_VERSION) -o $@ -c $<
+	g++ -std=$(CPP_VERSION) -o $@ -c $< -Wall
 
 # NOTE check include statements in .cpp file
 objects/src/main.o: src/block.hpp src/png.hpp
