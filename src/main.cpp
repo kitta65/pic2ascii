@@ -36,12 +36,15 @@ int main(int argc, char* argv[]) {
   }
 
   unsigned int block_width = 4;  // default
+  auto transparent = false;      // default
   for (std::string str : flags) {
     auto tuple = split(str, "=");
     auto flagname = get<0>(tuple);
     auto flagvalue = get<1>(tuple);
     if (flagname == "--block_width") {
       block_width = atoi(flagvalue.c_str());
+    } else if (flagname == "--transparent") {
+      transparent = true;
     } else {
       std::cerr << "invalid flag" << std::endl;
       return EXIT_FAILURE;
@@ -86,7 +89,7 @@ int main(int argc, char* argv[]) {
 
       if (output_file != NULL) {
         block.Draw(max_char);
-        png.WriteNthBlock(x, y, block);
+        png.WriteNthBlock(x, y, block, transparent);
       }
     }
     std::cout << std::endl;

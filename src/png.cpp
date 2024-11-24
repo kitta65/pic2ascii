@@ -87,7 +87,7 @@ bool PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
   return PNG::ReadNthBlock(x + (max_block_x + 1) * y, block);
 }
 
-void PNG::WriteNthBlock(unsigned int index, Block& block) {
+void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {
   auto max_block_x = this->width / block.width;
   if (this->width % block.width == 0) {
     --max_block_x;
@@ -109,14 +109,21 @@ void PNG::WriteNthBlock(unsigned int index, Block& block) {
         this->data[base_idx + offset_idx + 0] = grayscale;
         this->data[base_idx + offset_idx + 1] = grayscale;
         this->data[base_idx + offset_idx + 2] = grayscale;
-        this->data[base_idx + offset_idx + 3] = grayscale <= 127 ? 255 : 0;
+        if (transparent) {
+          this->data[base_idx + offset_idx + 3] = grayscale <= 127 ? 255 : 0;
+        } else {
+          this->data[base_idx + offset_idx + 3] = 255;
+        }
       }
       offset_idx += kNumChannels;
     }
   }
 }
 
-void PNG::WriteNthBlock(unsigned int x, unsigned int y, Block& block) {
+void PNG::WriteNthBlock(unsigned int x,
+                        unsigned int y,
+                        Block& block,
+                        bool transparent) {
   auto max_block_x = this->width / block.width;
   if (this->width % block.width == 0) {
     --max_block_x;
@@ -125,5 +132,5 @@ void PNG::WriteNthBlock(unsigned int x, unsigned int y, Block& block) {
   if (max_block_x < x) {
     throw std::runtime_error("out of range");
   }
-  PNG::WriteNthBlock(x + (max_block_x + 1) * y, block);
+  PNG::WriteNthBlock(x + (max_block_x + 1) * y, block, transparent);
 }
