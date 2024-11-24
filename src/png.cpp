@@ -125,5 +125,5 @@ void PNG::WriteNthBlock(unsigned int x, unsigned int y, Block& block) {
   if (max_block_x < x) {
     throw std::runtime_error("out of range");
   }
-  PNG::WriteNthBlock(x, block);
+  PNG::WriteNthBlock(x + (max_block_x + 1) * y, block);
 }
