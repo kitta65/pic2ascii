@@ -98,9 +98,10 @@ int main(int argc, char* argv[]) {
   auto block = p2a::Block(args.block_width);
   auto chars = p2a::characters(args.block_width);
   p2a::PNG png(args.input_file.c_str());
-  // (0, y) is scaned twice but don't mind
-  for (auto y = 0u; png.ReadNthBlock(0, y, block); ++y) {
-    for (auto x = 0u; png.ReadNthBlock(x, y, block); ++x) {
+  for (auto y = 0u; y <= png.MaxY(block); ++y) {
+    for (auto x = 0u; x <= png.MaxX(block); ++x) {
+      png.ReadNthBlock(x, y, block);
+
       float max_mssim = 0;
       auto max_char = p2a::SPACE;
       for (auto c : p2a::kAllCharacters) {

@@ -41,11 +41,25 @@ void PNG::Save(const char* file) {
   }
 };
 
-bool PNG::ReadNthBlock(unsigned int index, Block& block) {
+unsigned int PNG::MaxX(const Block& block) {
   auto max_block_x = this->width / block.width;
   if (this->width % block.width == 0) {
     --max_block_x;
   }
+
+  return max_block_x;
+}
+
+unsigned int PNG::MaxY(const Block& block) {
+  auto max_block_y = this->height / block.height;
+  if (this->height % block.height == 0) {
+    --max_block_y;
+  }
+  return max_block_y;
+}
+
+void PNG::ReadNthBlock(unsigned int index, Block& block) {
+  auto max_block_x = PNG::MaxX(block);
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
@@ -53,7 +67,7 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
       kNumChannels;
 
   if (this->width * this->height * kNumChannels <= base_idx) {
-    return false;
+    throw std::runtime_error("out of range");
   }
 
   for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
@@ -73,27 +87,14 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
       offset_idx += kNumChannels;
     }
   }
-  return true;
 }
 
-bool PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
-  auto max_block_x = this->width / block.width;
-  if (this->width % block.width == 0) {
-    --max_block_x;
-  }
-
-  if (max_block_x < x) {
-    return false;
-  }
-
-  return PNG::ReadNthBlock(x + (max_block_x + 1) * y, block);
+void PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
+  PNG::ReadNthBlock(x + (PNG::MaxX(block) + 1) * y, block);
 }
 
 void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {
-  auto max_block_x = this->width / block.width;
-  if (this->width % block.width == 0) {
-    --max_block_x;
-  }
+  auto max_block_x = PNG::MaxX(block);
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
@@ -126,15 +127,7 @@ void PNG::WriteNthBlock(unsigned int x,
                         unsigned int y,
                         Block& block,
                         bool transparent) {
-  auto max_block_x = this->width / block.width;
-  if (this->width % block.width == 0) {
-    --max_block_x;
-  }
-
-  if (max_block_x < x) {
-    throw std::runtime_error("out of range");
-  }
-  PNG::WriteNthBlock(x + (max_block_x + 1) * y, block, transparent);
+  PNG::WriteNthBlock(x + (PNG::MaxX(block) + 1) * y, block, transparent);
 }
 
 }  // namespace pic2ascii

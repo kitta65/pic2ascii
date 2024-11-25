@@ -12,7 +12,7 @@ TEST_CASE("draw all characters") {
       sizeof(p2a::kAllCharacters) / sizeof(*p2a::kAllCharacters);
 
   // if this assertion fails, you should prepare larger image
-  REQUIRE(png.ReadNthBlock(n, block));
+  REQUIRE_NOTHROW(png.ReadNthBlock(n, block));
 
   for (auto idx = 0u; idx < n; ++idx) {
     png.ReadNthBlock(idx, block);
