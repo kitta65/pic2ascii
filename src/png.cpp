@@ -11,6 +11,8 @@
 #include "block.hpp"
 #include "png.hpp"
 
+namespace pic2ascii {
+
 const int kNumChannels = 4;
 
 PNG::PNG(const char* file) {
@@ -134,3 +136,5 @@ void PNG::WriteNthBlock(unsigned int x,
   }
   PNG::WriteNthBlock(x + (max_block_x + 1) * y, block, transparent);
 }
+
+}  // namespace pic2ascii

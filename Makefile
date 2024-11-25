@@ -26,7 +26,7 @@ objects/%.o: %.cpp
 	g++ -std=$(CPP_VERSION) -o $@ -c $< -Wall -Werror
 
 # NOTE check include statements in .cpp file
-objects/src/main.o: src/block.hpp src/png.hpp
+objects/src/main.o: src/block.hpp src/png.hpp src/main.hpp
 objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/block.hpp src/png.hpp
 objects/src/block.o: src/block.hpp
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp

@@ -5,9 +5,30 @@
 
 #include "block.hpp"
 #include "png.hpp"
+#include "main.hpp"
 
-std::tuple<std::string, std::string> split(std::string str, std::string ch);
-std::vector<Block> characters(unsigned int block_width);
+namespace pic2ascii {
+
+std::tuple<std::string, std::string> split(std::string str, std::string ch) {
+  auto pos = str.find(ch);
+  auto left = str.substr(0, pos);
+  auto right = str.substr(pos + 1);
+  return std::tuple(left, right);
+}
+
+std::vector<Block> characters(unsigned int block_width) {
+  auto chars = std::vector<Block>();
+  for (auto c : kAllCharacters) {
+    auto char_ = Block(block_width);
+    char_.Draw(c);
+    chars.push_back(char_);
+  }
+  return chars;
+}
+
+}  // namespace pic2ascii
+
+namespace p2a = pic2ascii;
 
 int main(int argc, char* argv[]) {
   // handle CLI arguments
@@ -38,7 +59,7 @@ int main(int argc, char* argv[]) {
   unsigned int block_width = 4;  // default
   auto transparent = false;      // default
   for (std::string str : flags) {
-    auto tuple = split(str, "=");
+    auto tuple = p2a::split(str, "=");
     auto flagname = get<0>(tuple);
     auto flagvalue = get<1>(tuple);
     if (flagname == "--block_width") {
@@ -52,15 +73,15 @@ int main(int argc, char* argv[]) {
   }
 
   // read and edit image
-  auto block = Block(block_width);
-  auto chars = characters(block_width);
-  PNG png(input_file);
+  auto block = p2a::Block(block_width);
+  auto chars = p2a::characters(block_width);
+  p2a::PNG png(input_file);
   // (0, y) is scaned twice but don't mind
   for (auto y = 0u; png.ReadNthBlock(0, y, block); ++y) {
     for (auto x = 0u; png.ReadNthBlock(x, y, block); ++x) {
       float max_mssim = 0;
-      auto max_char = PIPE;  // TODO more reasonable default
-      for (auto c : kAllCharacters) {
+      auto max_char = p2a::PIPE;  // TODO more reasonable default
+      for (auto c : p2a::kAllCharacters) {
         auto char_ = chars[c];
         auto mssim = block.MSSIM(char_);
         if (max_mssim < mssim) {
@@ -70,19 +91,19 @@ int main(int argc, char* argv[]) {
       }
 
       switch (max_char) {
-        case BACKSLASH:
+        case p2a::BACKSLASH:
           std::cout << "\\";
           break;
-        case DASH:
+        case p2a::DASH:
           std::cout << "-";
           break;
-        case PIPE:
+        case p2a::PIPE:
           std::cout << "|";
           break;
-        case SLASH:
+        case p2a::SLASH:
           std::cout << "/";
           break;
-        case SPACE:
+        case p2a::SPACE:
           std::cout << " ";
           break;
       }
@@ -98,21 +119,4 @@ int main(int argc, char* argv[]) {
   if (output_file != NULL) {
     png.Save(output_file);
   }
-}
-
-std::tuple<std::string, std::string> split(std::string str, std::string ch) {
-  auto pos = str.find(ch);
-  auto left = str.substr(0, pos);
-  auto right = str.substr(pos + 1);
-  return std::tuple(left, right);
-}
-
-std::vector<Block> characters(unsigned int block_width) {
-  auto chars = std::vector<Block>();
-  for (auto c : kAllCharacters) {
-    auto char_ = Block(block_width);
-    char_.Draw(c);
-    chars.push_back(char_);
-  }
-  return chars;
 }

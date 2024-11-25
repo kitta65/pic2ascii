@@ -3,15 +3,17 @@
 #include "block.hpp"
 #include "png.hpp"
 
+namespace p2a = pic2ascii;
+
 TEST_CASE("constructor") {
-  auto png = PNG("./input/black.png");
+  auto png = p2a::PNG("./input/black.png");
   REQUIRE(png.width == 32);
   REQUIRE(png.height == 32);
 }
 
 TEST_CASE("ReadNthBlock remainder == 0") {
-  auto png = PNG("./input/black.png");
-  auto block = Block(8);
+  auto png = p2a::PNG("./input/black.png");
+  auto block = p2a::Block(8);
   auto idx = 0u;
   while (png.ReadNthBlock(idx, block)) {
     ++idx;
@@ -21,8 +23,8 @@ TEST_CASE("ReadNthBlock remainder == 0") {
 }
 
 TEST_CASE("ReadNthBlock remainder != 0") {
-  auto png = PNG("./input/black.png");
-  auto block = Block(10);
+  auto png = p2a::PNG("./input/black.png");
+  auto block = p2a::Block(10);
   auto idx = 0u;
   while (png.ReadNthBlock(idx, block)) {
     ++idx;
@@ -34,7 +36,7 @@ TEST_CASE("ReadNthBlock remainder != 0") {
 }
 
 TEST_CASE("ReadNthBlock out of range") {
-  auto png = PNG("./input/black.png");
-  auto block = Block(8u);
+  auto png = p2a::PNG("./input/black.png");
+  auto block = p2a::Block(8u);
   REQUIRE_FALSE(png.ReadNthBlock(1000, block));
 }

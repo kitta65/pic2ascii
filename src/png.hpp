@@ -1,6 +1,8 @@
 #ifndef kitta65_pic2ascii_png_hpp
 #define kitta65_pic2ascii_png_hpp
 
+namespace pic2ascii {
+
 class PNG {
  public:
   unsigned int width;
@@ -20,5 +22,7 @@ class PNG {
                      Block& block,
                      bool transparent = false);
 };
+
+}  // namespace pic2ascii
 
 #endif

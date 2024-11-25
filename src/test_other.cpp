@@ -3,17 +3,20 @@
 #include "block.hpp"
 #include "png.hpp"
 
+namespace p2a = pic2ascii;
+
 TEST_CASE("draw all characters") {
-  auto block = Block(128);
-  PNG png("input/white.png");
-  const unsigned int n = sizeof(kAllCharacters) / sizeof(*kAllCharacters);
+  auto block = p2a::Block(128);
+  p2a::PNG png("input/white.png");
+  const unsigned int n =
+      sizeof(p2a::kAllCharacters) / sizeof(*p2a::kAllCharacters);
 
   // if this assertion fails, you should prepare larger image
   REQUIRE(png.ReadNthBlock(n, block));
 
   for (auto idx = 0u; idx < n; ++idx) {
     png.ReadNthBlock(idx, block);
-    REQUIRE_NOTHROW(block.Draw(kAllCharacters[idx]));
+    REQUIRE_NOTHROW(block.Draw(p2a::kAllCharacters[idx]));
     png.WriteNthBlock(idx, block);
   }
 
@@ -23,12 +26,12 @@ TEST_CASE("draw all characters") {
 
 TEST_CASE("MSSIM does not change") {
   const unsigned int width = 128;
-  auto block_slash = Block(width);
-  PNG png_slash("./input/slash.png");
+  auto block_slash = p2a::Block(width);
+  p2a::PNG png_slash("./input/slash.png");
   png_slash.ReadNthBlock(0, block_slash);
 
-  auto block_pipe = Block(width);
-  PNG png_pipe("./input/pipe.png");
+  auto block_pipe = p2a::Block(width);
+  p2a::PNG png_pipe("./input/pipe.png");
   png_pipe.ReadNthBlock(0, block_pipe);
 
   REQUIRE_THAT(block_slash.MSSIM(block_pipe),

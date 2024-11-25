@@ -2,6 +2,8 @@
 #include <vector>
 #include "block.hpp"
 
+namespace pic2ascii {
+
 const float kLineThickness = 0.1;  // 1.0 is the width of Block
 
 float sq(float f) {
@@ -183,3 +185,5 @@ float Block::MSSIM(Block& other) {
 
   return total / sample;
 }
+
+}  // namespace pic2ascii

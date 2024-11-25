@@ -2,29 +2,31 @@
 #include "../libraries/catch_amalgamated.hpp"
 #include "block.hpp"
 
+namespace p2a = pic2ascii;
+
 TEST_CASE("construct block") {
-  Block block(12);
+  p2a::Block block(12);
   REQUIRE(block.width == 12);
   REQUIRE(block.height == 24);
   REQUIRE(block.filter_size == 3);
 }
 
 TEST_CASE("operator[]") {
-  Block block(1);
+  p2a::Block block(1);
   REQUIRE_THROWS(block[{1, 1}]);
 }
 
 TEST_CASE("draw characters") {
   const auto width = 16;
-  Block block(width);
+  p2a::Block block(width);
 
-  for (auto c : kAllCharacters) {
+  for (auto c : p2a::kAllCharacters) {
     REQUIRE_NOTHROW(block.Draw(c));
   }
 }
 
 TEST_CASE("filter") {
-  Block original(12);  // filter_size should be 3
+  p2a::Block original(12);  // filter_size should be 3
   original.Clear();
   original[{1, 1}] = 255 - 18;
 
@@ -34,15 +36,15 @@ TEST_CASE("filter") {
 }
 
 TEST_CASE("MSSIM fail") {
-  Block block_a(16);
-  Block block_b(8);
+  p2a::Block block_a(16);
+  p2a::Block block_b(8);
   REQUIRE_THROWS(block_a.MSSIM(block_b));
 }
 
 TEST_CASE("MSSIM 1.0") {
   const unsigned int width = 16;
-  Block block_x(width);
-  Block block_y(width);
+  p2a::Block block_x(width);
+  p2a::Block block_y(width);
   for (auto w = 0u; w < block_x.width; ++w) {
     for (auto h = 0u; h < block_x.height; ++h) {
       block_x[{w, h}] = 0;
@@ -55,8 +57,8 @@ TEST_CASE("MSSIM 1.0") {
 
 TEST_CASE("MSSIM 0.0") {
   const unsigned int width = 16;
-  Block block_x(width);
-  Block block_y(width);
+  p2a::Block block_x(width);
+  p2a::Block block_y(width);
   for (auto w = 0u; w < block_x.width; ++w) {
     for (auto h = 0u; h < block_x.height; ++h) {
       block_x[{w, h}] = 0;

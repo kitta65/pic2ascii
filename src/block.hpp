@@ -1,6 +1,8 @@
 #ifndef kitta65_pic2ascii_block_hpp
 #define kitta65_pic2ascii_block_hpp
 
+namespace pic2ascii {
+
 struct XY {
   unsigned int x;
   unsigned int y;
@@ -31,5 +33,7 @@ class Block {
             float x2,
             float y2);  // NOTE (0, 0) is bottom-left
 };
+
+}  // namespace pic2ascii
 
 #endif
