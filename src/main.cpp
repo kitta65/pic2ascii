@@ -9,7 +9,49 @@
 
 namespace pic2ascii {
 
-std::tuple<std::string, std::string> split(std::string str, std::string ch) {
+Args::Args(int argc, char* argv[]) {
+  auto args = std::vector<std::string>();
+  auto flags = std::vector<std::string>();
+  for (auto i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg.starts_with("--")) {
+      flags.push_back(arg);
+    } else {
+      args.push_back(arg);
+    }
+  }
+
+  this->input_file = "";
+  this->output_file = "";
+  switch (args.size()) {
+    case 2:
+      this->output_file = args[1];
+    case 1:
+      this->input_file = args[0];
+      break;
+    default:
+      std::cerr << "invalid arguments" << std::endl;
+      throw std::runtime_error("the size of blocks does not match");
+  }
+
+  this->block_width = 16;     // default
+  this->transparent = false;  // default
+  for (std::string str : flags) {
+    auto tuple = split(str, "=");
+    auto flagname = get<0>(tuple);
+    auto flagvalue = get<1>(tuple);
+    if (flagname == "--block_width") {
+      this->block_width = atoi(flagvalue.c_str());
+    } else if (flagname == "--transparent") {
+      this->transparent = true;
+    } else {
+      std::cerr << "invalid flag" << std::endl;
+      throw std::runtime_error("the size of blocks does not match");
+    }
+  }
+}
+
+std::tuple<std::string, std::string> split(std::string& str, std::string& ch) {
   auto pos = str.find(ch);
   auto left = str.substr(0, pos);
   auto right = str.substr(pos + 1);
@@ -31,51 +73,12 @@ std::vector<Block> characters(unsigned int block_width) {
 namespace p2a = pic2ascii;
 
 int main(int argc, char* argv[]) {
-  // handle CLI arguments
-  auto args = std::vector<std::string>();
-  auto flags = std::vector<std::string>();
-  for (auto i = 1; i < argc; ++i) {
-    std::string arg = argv[i];
-    if (arg.starts_with("--")) {
-      flags.push_back(arg);
-    } else {
-      args.push_back(arg);
-    }
-  }
-
-  const char* input_file = NULL;
-  const char* output_file = NULL;
-  switch (args.size()) {
-    case 2:
-      output_file = args[1].c_str();
-    case 1:
-      input_file = args[0].c_str();
-      break;
-    default:
-      std::cerr << "invalid arguments" << std::endl;
-      return EXIT_FAILURE;
-  }
-
-  unsigned int block_width = 4;  // default
-  auto transparent = false;      // default
-  for (std::string str : flags) {
-    auto tuple = p2a::split(str, "=");
-    auto flagname = get<0>(tuple);
-    auto flagvalue = get<1>(tuple);
-    if (flagname == "--block_width") {
-      block_width = atoi(flagvalue.c_str());
-    } else if (flagname == "--transparent") {
-      transparent = true;
-    } else {
-      std::cerr << "invalid flag" << std::endl;
-      return EXIT_FAILURE;
-    }
-  }
+  auto args = p2a::Args(argc, argv);
 
   // read and edit image
-  auto block = p2a::Block(block_width);
-  auto chars = p2a::characters(block_width);
-  p2a::PNG png(input_file);
+  auto block = p2a::Block(args.block_width);
+  auto chars = p2a::characters(args.block_width);
+  p2a::PNG png(args.input_file.c_str());
   // (0, y) is scaned twice but don't mind
   for (auto y = 0u; png.ReadNthBlock(0, y, block); ++y) {
     for (auto x = 0u; png.ReadNthBlock(x, y, block); ++x) {
@@ -108,15 +111,15 @@ int main(int argc, char* argv[]) {
           break;
       }
 
-      if (output_file != NULL) {
+      if (args.output_file != "") {
         block.Draw(max_char);
-        png.WriteNthBlock(x, y, block, transparent);
+        png.WriteNthBlock(x, y, block, args.transparent);
       }
     }
     std::cout << std::endl;
   }
 
-  if (output_file != NULL) {
-    png.Save(output_file);
+  if (args.output_file != "") {
+    png.Save(args.output_file.c_str());
   }
 }
