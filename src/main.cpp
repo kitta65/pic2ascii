@@ -51,7 +51,7 @@ Args::Args(int argc, char* argv[]) {
   }
 }
 
-std::tuple<std::string, std::string> split(std::string& str, std::string& ch) {
+std::tuple<std::string, std::string> split(std::string str, std::string ch) {
   auto pos = str.find(ch);
   auto left = str.substr(0, pos);
   auto right = str.substr(pos + 1);
@@ -66,6 +66,25 @@ std::vector<Block> characters(unsigned int block_width) {
     chars.push_back(char_);
   }
   return chars;
+}
+
+// returning `const char*` is valid here
+// https://stackoverflow.com/questions/2579874/what-is-the-lifetime-of-a-string-literal-returned-by-a-function
+const char* print(Character ch) {
+  switch (ch) {
+    case BACKSLASH:
+      return "\\";
+    case DASH:
+      return "-";
+    case PIPE:
+      return "|";
+    case SLASH:
+      return "/";
+    case SPACE:
+      return " ";
+  }
+
+  throw std::runtime_error("not implemented");
 }
 
 }  // namespace pic2ascii
@@ -83,7 +102,7 @@ int main(int argc, char* argv[]) {
   for (auto y = 0u; png.ReadNthBlock(0, y, block); ++y) {
     for (auto x = 0u; png.ReadNthBlock(x, y, block); ++x) {
       float max_mssim = 0;
-      auto max_char = p2a::PIPE;  // TODO more reasonable default
+      auto max_char = p2a::SPACE;
       for (auto c : p2a::kAllCharacters) {
         auto char_ = chars[c];
         auto mssim = block.MSSIM(char_);
@@ -93,24 +112,7 @@ int main(int argc, char* argv[]) {
         }
       }
 
-      switch (max_char) {
-        case p2a::BACKSLASH:
-          std::cout << "\\";
-          break;
-        case p2a::DASH:
-          std::cout << "-";
-          break;
-        case p2a::PIPE:
-          std::cout << "|";
-          break;
-        case p2a::SLASH:
-          std::cout << "/";
-          break;
-        case p2a::SPACE:
-          std::cout << " ";
-          break;
-      }
-
+      std::cout << print(max_char);
       if (args.output_file != "") {
         block.Draw(max_char);
         png.WriteNthBlock(x, y, block, args.transparent);

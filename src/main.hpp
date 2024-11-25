@@ -11,5 +11,6 @@ class Args {
 
 std::tuple<std::string, std::string> split(std::string str, std::string ch);
 std::vector<Block> characters(unsigned int block_width);
+const char* print(Character);
 
 }  // namespace pic2ascii
