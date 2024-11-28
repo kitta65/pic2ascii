@@ -32,15 +32,6 @@ PNG::~PNG() {
   stbi_image_free(this->data);
 }
 
-void PNG::Save(const char* file) {
-  int result = stbi_write_png(file, this->width, this->height, kNumChannels,
-                              this->data, this->width * kNumChannels);
-  if (result == 0) {
-    throw std::runtime_error("failed to write image");
-    stbi_image_free(this->data);
-  }
-};
-
 unsigned int PNG::MaxX(const Block& block) {
   auto max_block_x = this->width / block.width;
   if (this->width % block.width == 0) {
@@ -129,5 +120,13 @@ void PNG::WriteNthBlock(unsigned int x,
                         bool transparent) {
   PNG::WriteNthBlock(x + (PNG::MaxX(block) + 1) * y, block, transparent);
 }
+
+void PNG::Save(const char* file) {
+  int result = stbi_write_png(file, this->width, this->height, kNumChannels,
+                              this->data, this->width * kNumChannels);
+  if (result == 0) {
+    throw std::runtime_error("failed to write image");
+  }
+};
 
 }  // namespace pic2ascii

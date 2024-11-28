@@ -10,10 +10,9 @@ class PNG {
   unsigned char* data;
 
   PNG(const char* file);
-  ~PNG();
+  virtual ~PNG();
   unsigned int MaxX(const Block& block);
   unsigned int MaxY(const Block& block);
-  void Save(const char* file);
   void ReadNthBlock(unsigned int index, Block& block);
   void ReadNthBlock(unsigned int x, unsigned int y, Block& block);
   void WriteNthBlock(unsigned int index,
@@ -23,6 +22,7 @@ class PNG {
                      unsigned int y,
                      Block& block,
                      bool transparent = false);
+  void Save(const char* file);
 };
 
 }  // namespace pic2ascii
