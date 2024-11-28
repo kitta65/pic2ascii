@@ -135,7 +135,6 @@ float Block::MSSIM(Block& other) {
 
   float total = 0.0;
   unsigned int sample = 0;
-  // TODO DRY
   auto filter_size = this->filter_size;
   auto filter_offset = (filter_size - 1) / 2;  // >= 0
 
@@ -158,9 +157,9 @@ float Block::MSSIM(Block& other) {
     }
   }
   auto filtered_this = this->Filter();
-  auto filtered_other = other.Filter();
+  auto filtered_other = other.Filter();  // TODO use cached result
   auto filtered_this_sq = this_sq.Filter();
-  auto filtered_other_sq = other_sq.Filter();
+  auto filtered_other_sq = other_sq.Filter();  // TODO use cached result
   auto filtered_maltiplied = maltiplied.Filter();
 
   for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
