@@ -94,16 +94,17 @@ namespace p2a = pic2ascii;
 int main(int argc, char* argv[]) {
   auto args = p2a::Args(argc, argv);
 
-  // read and edit image
   auto block = p2a::Block(args.block_width);
   auto chars = p2a::characters(args.block_width);
+  auto results = std::vector<p2a::Character>();
   p2a::PNG png(args.input_file.c_str());
+
   for (auto y = 0u; y <= png.MaxY(block); ++y) {
     for (auto x = 0u; x <= png.MaxX(block); ++x) {
       float max_mssim = 0;
       auto max_char = p2a::SPACE;
-      auto is_blank = png.ReadNthBlock(x, y, block);
-      if (!is_blank) {
+      auto has_content = png.ReadNthBlock(x, y, block);
+      if (has_content) {
         for (auto c : p2a::kAllCharacters) {
           auto char_ = chars[c];
           auto mssim = block.MSSIM(char_);
@@ -115,15 +116,17 @@ int main(int argc, char* argv[]) {
       }
 
       std::cout << print(max_char);
-      if (args.output_file != "") {
-        block.Draw(max_char);
-        png.WriteNthBlock(x, y, block, args.transparent);
-      }
+      results.push_back(max_char);
     }
     std::cout << std::endl;
   }
 
   if (args.output_file != "") {
+    const auto size = results.size();
+    for (auto i = 0u; i < size; ++i) {
+      block.Draw(results[i]);
+      png.WriteNthBlock(i, block);
+    }
     png.Save(args.output_file.c_str());
   }
 }

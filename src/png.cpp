@@ -61,7 +61,7 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
     throw std::runtime_error("out of range");
   }
 
-  auto is_blank = true;
+  auto has_content = false;
   for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
     auto offset_idx = pixel_y * width * kNumChannels;
     for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
@@ -78,12 +78,12 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
       }
 
       if (block[{pixel_x, pixel_y}] < 255) {
-        is_blank = false;
+        has_content = true;
       }
       offset_idx += kNumChannels;
     }
   }
-  return is_blank;
+  return has_content;
 }
 
 bool PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
