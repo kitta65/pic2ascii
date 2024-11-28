@@ -49,7 +49,7 @@ unsigned int PNG::MaxY(const Block& block) {
   return max_block_y;
 }
 
-void PNG::ReadNthBlock(unsigned int index, Block& block) {
+bool PNG::ReadNthBlock(unsigned int index, Block& block) {
   auto max_block_x = PNG::MaxX(block);
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
@@ -61,6 +61,7 @@ void PNG::ReadNthBlock(unsigned int index, Block& block) {
     throw std::runtime_error("out of range");
   }
 
+  auto is_blank = true;
   for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
     auto offset_idx = pixel_y * width * kNumChannels;
     for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
@@ -75,13 +76,18 @@ void PNG::ReadNthBlock(unsigned int index, Block& block) {
                          0.114 * this->data[base_idx + offset_idx + 2];
         block[{pixel_x, pixel_y}] = grayscale;
       }
+
+      if (block[{pixel_x, pixel_y}] < 255) {
+        is_blank = false;
+      }
       offset_idx += kNumChannels;
     }
   }
+  return is_blank;
 }
 
-void PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
-  PNG::ReadNthBlock(x + (PNG::MaxX(block) + 1) * y, block);
+bool PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
+  return PNG::ReadNthBlock(x + (PNG::MaxX(block) + 1) * y, block);
 }
 
 void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {

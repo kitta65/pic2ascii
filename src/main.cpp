@@ -100,16 +100,17 @@ int main(int argc, char* argv[]) {
   p2a::PNG png(args.input_file.c_str());
   for (auto y = 0u; y <= png.MaxY(block); ++y) {
     for (auto x = 0u; x <= png.MaxX(block); ++x) {
-      png.ReadNthBlock(x, y, block);
-
       float max_mssim = 0;
       auto max_char = p2a::SPACE;
-      for (auto c : p2a::kAllCharacters) {
-        auto char_ = chars[c];
-        auto mssim = block.MSSIM(char_);
-        if (max_mssim < mssim) {
-          max_mssim = mssim;
-          max_char = c;
+      auto is_blank = png.ReadNthBlock(x, y, block);
+      if (!is_blank) {
+        for (auto c : p2a::kAllCharacters) {
+          auto char_ = chars[c];
+          auto mssim = block.MSSIM(char_);
+          if (max_mssim < mssim) {
+            max_mssim = mssim;
+            max_char = c;
+          }
         }
       }
 
