@@ -52,7 +52,7 @@ unsigned int PNG::MaxY(const Block& block) {
 }
 
 bool PNG::ReadNthBlock(unsigned int index, Block& block) {
-  auto max_block_x = PNG::MaxX(block);
+  auto max_block_x = MaxX(block);
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
@@ -89,11 +89,11 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
 }
 
 bool PNG::ReadNthBlock(unsigned int x, unsigned int y, Block& block) {
-  return PNG::ReadNthBlock(x + (PNG::MaxX(block) + 1) * y, block);
+  return ReadNthBlock(x + (MaxX(block) + 1) * y, block);
 }
 
 void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {
-  auto max_block_x = PNG::MaxX(block);
+  auto max_block_x = MaxX(block);
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
@@ -126,7 +126,7 @@ void PNG::WriteNthBlock(unsigned int x,
                         unsigned int y,
                         Block& block,
                         bool transparent) {
-  PNG::WriteNthBlock(x + (PNG::MaxX(block) + 1) * y, block, transparent);
+  WriteNthBlock(x + (MaxX(block) + 1) * y, block, transparent);
 }
 
 void PNG::Save(const char* file) {
