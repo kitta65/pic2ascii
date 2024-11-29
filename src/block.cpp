@@ -27,7 +27,7 @@ Block::Block(unsigned int width)
   }
 };
 
-unsigned int& Block::operator[](XY xy) {
+unsigned int& Block::operator[](const XY& xy) {
   if (width_ <= xy.x || height_ <= xy.y) {
     throw std::runtime_error("out of range");
   }

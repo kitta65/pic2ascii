@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdexcept>
 #include <tuple>
+#include "xy.hpp"
 #include "matrix.hpp"
 
 namespace pic2ascii {
@@ -15,10 +16,8 @@ unsigned int& Matrix::operator[](unsigned int index) {
   return data_[index];
 }
 
-unsigned int& Matrix::operator[](std::tuple<unsigned int, unsigned int> xy) {
-  auto x = get<0>(xy);
-  auto y = get<1>(xy);
-  return (*this)[x + y * width_];
+unsigned int& Matrix::operator[](const XY& xy) {
+  return (*this)[xy.x + xy.y * width_];
 }
 
 Matrix Matrix::operator*(Matrix& other) {

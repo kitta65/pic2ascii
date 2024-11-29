@@ -1,5 +1,6 @@
 #include "../libraries/catch_amalgamated.hpp"
 
+#include "xy.hpp"
 #include "matrix.hpp"
 
 namespace p2a = pic2ascii;

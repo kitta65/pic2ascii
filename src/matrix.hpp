@@ -12,8 +12,7 @@ class Matrix {
 
   Matrix(unsigned int width, unsigned int height);
   unsigned int& operator[](unsigned int index);
-  unsigned int& operator[](
-      std::tuple<unsigned int, unsigned int> xy);  // NOTE (0, 0) is top-left
+  unsigned int& operator[](const XY& xy);  // NOTE (0, 0) is top-left
   Matrix operator*(Matrix& other);
 };
 
