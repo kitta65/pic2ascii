@@ -106,8 +106,7 @@ int main(int argc, char* argv[]) {
       auto has_content = png.ReadNthBlock(x, y, block);
       if (has_content) {
         for (auto c : p2a::kAllCharacters) {
-          auto char_ = chars[c];
-          auto mssim = block.MSSIM(char_);
+          auto mssim = block.MSSIM(chars[c]);
           if (max_mssim < mssim) {
             max_mssim = mssim;
             max_char = c;

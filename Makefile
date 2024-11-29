@@ -29,6 +29,7 @@ objects/%.o: %.cpp
 objects/src/main.o: src/block.hpp src/png.hpp src/main.hpp
 objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/block.hpp src/png.hpp
 objects/src/block.o: src/block.hpp
+objects/src/matrix.o: src/matrix.hpp
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
 bin/%: objects/src/%.o
@@ -40,16 +41,18 @@ bin/main: objects/src/block.o objects/src/png.o
 bin/test_other: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
 bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
 bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
+bin/test_matrix: objects/libraries/catch_amalgamated.o objects/src/matrix.o
 
 .PHONY: run
 run: bin/main
 	./bin/main ./input/sample.png ./output/makefile_run.png --block_width=8
 
 .PHONY: test
-test: bin/test_block bin/test_png bin/test_other
-	./bin/test_other
+test: bin/test_matrix bin/test_block bin/test_png bin/test_other
+	./bin/test_matrix
 	./bin/test_block
 	./bin/test_png
+	./bin/test_other
 
 .PHONY: clean
 clean:
