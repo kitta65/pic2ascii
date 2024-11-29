@@ -8,8 +8,8 @@ namespace p2a = pic2ascii;
 
 TEST_CASE("constructor") {
   auto png = p2a::PNG("./input/black.png");  // 32*32
-  REQUIRE(png.width == 32);
-  REQUIRE(png.height == 32);
+  REQUIRE(png.width_ == 32);
+  REQUIRE(png.height_ == 32);
 }
 
 TEST_CASE("ReadNthBlock remainder == 0") {

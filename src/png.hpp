@@ -5,9 +5,9 @@ namespace pic2ascii {
 
 class PNG {
  public:
-  unsigned int width;
-  unsigned int height;
-  unsigned char* data;
+  unsigned int width_;
+  unsigned int height_;
+  unsigned char* data_;
 
   PNG(const char* file);
   virtual ~PNG();

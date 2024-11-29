@@ -25,18 +25,18 @@ PNG::PNG(const char* file) {
     throw std::runtime_error("failed to load image");
   }
 
-  this->width = width;
-  this->height = height;
-  this->data = data;
+  width_ = width;
+  height_ = height;
+  data_ = data;
 };
 
 PNG::~PNG() {
-  stbi_image_free(this->data);
+  stbi_image_free(data_);
 }
 
 unsigned int PNG::MaxX(const Block& block) {
-  auto max_block_x = this->width / block.width_;
-  if (this->width % block.width_ == 0) {
+  auto max_block_x = width_ / block.width_;
+  if (width_ % block.width_ == 0) {
     --max_block_x;
   }
 
@@ -44,8 +44,8 @@ unsigned int PNG::MaxX(const Block& block) {
 }
 
 unsigned int PNG::MaxY(const Block& block) {
-  auto max_block_y = this->height / block.height_;
-  if (this->height % block.height_ == 0) {
+  auto max_block_y = height_ / block.height_;
+  if (height_ % block.height_ == 0) {
     --max_block_y;
   }
   return max_block_y;
@@ -56,26 +56,26 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
-      (block_x * block.width_ + block_y * block.height_ * this->width) *
+      (block_x * block.width_ + block_y * block.height_ * width_) *
       kNumChannels;
 
-  if (this->width * this->height * kNumChannels <= base_idx) {
+  if (width_ * height_ * kNumChannels <= base_idx) {
     throw std::runtime_error("out of range");
   }
 
   auto has_content = false;
   for (auto pixel_y = 0u; pixel_y < block.height_; ++pixel_y) {
-    auto offset_idx = pixel_y * width * kNumChannels;
+    auto offset_idx = pixel_y * width_ * kNumChannels;
     for (auto pixel_x = 0u; pixel_x < block.width_; ++pixel_x) {
-      if (this->width <= block_x * block.width_ + pixel_x ||
-          this->height <= block_y * block.height_ + pixel_y) {
+      if (width_ <= block_x * block.width_ + pixel_x ||
+          height_ <= block_y * block.height_ + pixel_y) {
         block[{pixel_x, pixel_y}] = 255;
-      } else if (this->data[base_idx + 3] <= 127) {  // if transparent
+      } else if (data_[base_idx + 3] <= 127) {  // if transparent
         block[{pixel_x, pixel_y}] = 255;
       } else {
-        auto grayscale = 0.299 * this->data[base_idx + offset_idx + 0] +
-                         0.587 * this->data[base_idx + offset_idx + 1] +
-                         0.114 * this->data[base_idx + offset_idx + 2];
+        auto grayscale = 0.299 * data_[base_idx + offset_idx + 0] +
+                         0.587 * data_[base_idx + offset_idx + 1] +
+                         0.114 * data_[base_idx + offset_idx + 2];
         block[{pixel_x, pixel_y}] = grayscale;
       }
 
@@ -97,24 +97,24 @@ void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
-      (block_x * block.width_ + block_y * block.height_ * this->width) *
+      (block_x * block.width_ + block_y * block.height_ * width_) *
       kNumChannels;
 
   for (auto pixel_y = 0u; pixel_y < block.height_; ++pixel_y) {
-    auto offset_idx = pixel_y * width * kNumChannels;
+    auto offset_idx = pixel_y * width_ * kNumChannels;
     for (auto pixel_x = 0u; pixel_x < block.width_; ++pixel_x) {
-      if (this->width <= block_x * block.width_ + pixel_x ||
-          this->height <= block_y * block.height_ + pixel_y) {
+      if (width_ <= block_x * block.width_ + pixel_x ||
+          height_ <= block_y * block.height_ + pixel_y) {
         // NOP
       } else {
         unsigned char grayscale = block[{pixel_x, pixel_y}];
-        this->data[base_idx + offset_idx + 0] = grayscale;
-        this->data[base_idx + offset_idx + 1] = grayscale;
-        this->data[base_idx + offset_idx + 2] = grayscale;
+        data_[base_idx + offset_idx + 0] = grayscale;
+        data_[base_idx + offset_idx + 1] = grayscale;
+        data_[base_idx + offset_idx + 2] = grayscale;
         if (transparent) {
-          this->data[base_idx + offset_idx + 3] = grayscale <= 127 ? 255 : 0;
+          data_[base_idx + offset_idx + 3] = grayscale <= 127 ? 255 : 0;
         } else {
-          this->data[base_idx + offset_idx + 3] = 255;
+          data_[base_idx + offset_idx + 3] = 255;
         }
       }
       offset_idx += kNumChannels;
@@ -130,8 +130,8 @@ void PNG::WriteNthBlock(unsigned int x,
 }
 
 void PNG::Save(const char* file) {
-  int result = stbi_write_png(file, this->width, this->height, kNumChannels,
-                              this->data, this->width * kNumChannels);
+  int result = stbi_write_png(file, width_, height_, kNumChannels, data_,
+                              width_ * kNumChannels);
   if (result == 0) {
     throw std::runtime_error("failed to write image");
   }
