@@ -6,9 +6,9 @@ namespace pic2ascii {
 
 class Matrix {
  public:
-  unsigned int width;
-  unsigned int height;
-  std::vector<unsigned int> data;
+  unsigned int width_;
+  unsigned int height_;
+  std::vector<unsigned int> data_;
 
   Matrix(unsigned int width, unsigned int height);
   unsigned int& operator[](unsigned int index);

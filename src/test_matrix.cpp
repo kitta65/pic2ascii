@@ -17,8 +17,8 @@ TEST_CASE("operator* success") {
   right[{0, 0}] = 3;
 
   auto result = left * right;
-  REQUIRE(result.width == 1);
-  REQUIRE(result.height == 1);
+  REQUIRE(result.width_ == 1);
+  REQUIRE(result.height_ == 1);
   REQUIRE(result[{0, 0}] == 6);
 }
 

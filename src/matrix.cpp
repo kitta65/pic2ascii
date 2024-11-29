@@ -5,32 +5,29 @@
 
 namespace pic2ascii {
 
-Matrix::Matrix(unsigned int width, unsigned int height) {
-  this->width = width;
-  this->height = height;
-  this->data = std::vector<unsigned int>(width * height);
-}
+Matrix::Matrix(unsigned int width, unsigned int height)
+    : width_(width), height_(height), data_(width * height) {}
 
 unsigned int& Matrix::operator[](unsigned int index) {
-  if (this->width * this->height <= index) {
+  if (width_ * height_ <= index) {
     throw std::runtime_error("out of range");
   }
-  return this->data[index];
+  return data_[index];
 }
 
 unsigned int& Matrix::operator[](std::tuple<unsigned int, unsigned int> xy) {
   auto x = get<0>(xy);
   auto y = get<1>(xy);
-  return (*this)[x + y * this->width];
+  return (*this)[x + y * width_];
 }
 
 Matrix Matrix::operator*(Matrix& other) {
-  if (this->width != other.width || this->height != other.height) {
+  if (width_ != other.width_ || height_ != other.height_) {
     throw std::runtime_error("the size of matrix does not match");
   }
-  auto multiplied = Matrix(this->width, this->height);
-  for (auto y = 0u; y < this->height; ++y) {
-    for (auto x = 0u; x < this->width; ++x) {
+  auto multiplied = Matrix(width_, height_);
+  for (auto y = 0u; y < height_; ++y) {
+    for (auto x = 0u; x < width_; ++x) {
       multiplied[{x, y}] = (*this)[{x, y}] * other[{x, y}];
     }
   }
