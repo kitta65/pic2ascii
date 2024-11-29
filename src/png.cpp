@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <tuple>
 #include <vector>
 
 // see https://github.com/nothings/stb/blob/master/stb_image.h

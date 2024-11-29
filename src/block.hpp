@@ -3,11 +3,6 @@
 
 namespace pic2ascii {
 
-struct XY {
-  unsigned int x;
-  unsigned int y;
-};
-
 #define ALL_CHARACTERS {BACKSLASH, DASH, PIPE, SLASH, SPACE}
 enum Character ALL_CHARACTERS;
 const Character kAllCharacters[] = ALL_CHARACTERS;
@@ -20,7 +15,8 @@ class Block {
   unsigned int filter_size_;
 
   Block(unsigned int width);
-  unsigned int& operator[](XY xy);  // NOTE (0, 0) is top-left
+  unsigned int& operator[](
+      std::tuple<unsigned int, unsigned int> xy);  // NOTE (0, 0) is top-left
   void Clear();
   void Draw(Character ch);
   Block Filter();
