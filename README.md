@@ -10,7 +10,7 @@ pic2ascii converts a line art into ascii art. Only PNG format is currently suppo
 ```sh
 git clone https://github.com/kitta65/pic2ascii.git
 cd pic2ascii
-make default
+make FLAG=-DPIC2ASCII_RELEASE
 ./bin/main path/to/input/image.png path/to/output/image.png --block_width=8 --transparent
 ```
 

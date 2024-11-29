@@ -1,41 +1,70 @@
 #include <stdexcept>
 #include <vector>
+
+#include "xy.hpp"
+#include "matrix.hpp"
 #include "block.hpp"
+
+namespace pic2ascii {
 
 const float kLineThickness = 0.1;  // 1.0 is the width of Block
 
-float sq(float f) {
+template <typename T>
+float sq(T f) {
   return f * f;
 }
 
-Block::Block(unsigned int width) {
-  if (width <= 0) {
+Block::Block(unsigned int width)
+    : width_(width),
+      height_(width * 2),
+      filter_size_(width / 4),
+      has_filtered_cache_(false),
+      has_sq_filtered_cache_(false),
+      pixels_(width, width * 2),
+      filtered_pixels_(width, width * 2),
+      sq_filtered_pixels_(width, width * 2) {
+  if (width_ <= 0) {
     throw std::logic_error("width should be greater than 0");
   }
-
-  this->width = width;
-  this->height = width * 2;
-  this->pixels = std::vector<unsigned int>(width * height);
-
-  unsigned int filter_size = width / 4;
-  if (filter_size % 2 == 0) {
-    filter_size += 1;  // should be odd number
+  if (filter_size_ % 2 == 0) {
+    filter_size_ += 1;  // should be odd number
   }
-  this->filter_size = filter_size;
 };
 
-unsigned int& Block::operator[](XY xy) {
-  if (this->width <= xy.x || this->height <= xy.y) {
+unsigned int& Block::Get(const XY& xy) {
+#ifndef PIC2ASCII_RELEASE
+  if (IsOutOfRange(xy)) {
     throw std::runtime_error("out of range");
   }
-  unsigned int x = xy.x;
-  unsigned int y = xy.y;
-  return this->pixels[x + y * this->width];
+#endif
+
+  return pixels_[xy.x + xy.y * width_];
+}
+
+void Block::Set(const XY& xy, unsigned int grayscale) {
+#ifndef PIC2ASCII_RELEASE
+  if (IsOutOfRange(xy)) {
+    throw std::runtime_error("out of range");
+  }
+#endif
+
+  has_filtered_cache_ = false;
+  has_sq_filtered_cache_ = false;
+  pixels_[xy.x + xy.y * width_] = grayscale;
+}
+
+bool Block::IsOutOfRange(const XY& xy) {
+  if (width_ <= xy.x || height_ <= xy.y) {
+    return true;
+  }
+  return false;
 }
 
 void Block::Clear() {
-  for (unsigned int i = 0; i < this->width * this->height; ++i) {
-    pixels[i] = 255;
+  for (unsigned int h = 0u; h < height_; ++h) {
+    for (unsigned int w = 0u; w < width_; ++w) {
+      Set({w, h}, 255);
+    }
   }
 }
 
@@ -68,11 +97,11 @@ void Block::Line(float x1, float y1, float x2, float y2) {
   const float b1 = x1 - x2;
   const float c1 = x2 * y1 - x1 * y2;
 
-  for (unsigned int x_ = 0; x_ < this->width; ++x_) {
-    float x = static_cast<float>(x_) / this->width;
+  for (unsigned int x_ = 0; x_ < width_; ++x_) {
+    float x = static_cast<float>(x_) / width_;
 
-    for (unsigned int y_ = 0; y_ < this->height; ++y_) {
-      float y = 2 - 2 * static_cast<float>(y_) / this->height;
+    for (unsigned int y_ = 0; y_ < height_; ++y_) {
+      float y = 2 - 2 * static_cast<float>(y_) / height_;
       float d_sq =
           ((a1 * a1 * x * x) + (b1 * b1 * y * y) + (2 * a1 * b1 * x * y) +
            (2 * a1 * c1 * x) + (2 * b1 * c1 * y) + (c1 * c1)) /
@@ -95,34 +124,76 @@ void Block::Line(float x1, float y1, float x2, float y2) {
         continue;
       }
 
-      (*this)[{x_, y_}] = 0;
+      Set({x_, y_}, 0);
     }
   }
 }
 
-Block Block::Filter() {
-  Block block(this->width);
-  auto filter_size = this->filter_size;
-  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+Matrix* Block::Filter() {
+  if (!has_filtered_cache_) {
+    MakeFilteredCache();
+  }
 
-  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+  return &filtered_pixels_;
+}
+
+Matrix* Block::SQFilter() {
+  if (!has_sq_filtered_cache_) {
+    MakeSQFilteredCache();
+  }
+
+  return &sq_filtered_pixels_;
+}
+
+void Block::MakeFilteredCache() {
+  const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
+  const auto sq_filter_size = sq(filter_size_);
+
+  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       // calculate average in the window
-      unsigned int sum = 0u;
+      unsigned int filtered_sum = 0u;
       for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
         for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
-          sum += (*this)[{x, y}];
+          filtered_sum += Get({x, y});
         }
       }
-      block[{w, h}] = sum / (filter_size * filter_size);
+      filtered_pixels_[{w, h}] = filtered_sum / sq_filter_size;
     }
   }
 
-  return block;
+  has_filtered_cache_ = true;
+}
+
+void Block::MakeSQFilteredCache() {
+  const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
+  const auto sq_filter_size = sq(filter_size_);
+
+  Matrix sq_pixels(width_, height_);
+  for (auto w = 0u; w < width_; ++w) {
+    for (auto h = 0u; h < height_; ++h) {
+      sq_pixels[{w, h}] = sq(Get({w, h}));
+    }
+  }
+
+  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
+      // calculate average in the window
+      unsigned int sq_filtered_sum = 0u;
+      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
+        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
+          sq_filtered_sum += sq_pixels[{x, y}];
+        }
+      }
+      sq_filtered_pixels_[{w, h}] = sq_filtered_sum / sq_filter_size;
+    }
+  }
+
+  has_sq_filtered_cache_ = true;
 }
 
 float Block::MSSIM(Block& other) {
-  if (this->width != other.width || this->height != other.height) {
+  if (width_ != other.width_ || height_ != other.height_) {
     throw std::runtime_error("the size of blocks does not match");
   }
 
@@ -133,36 +204,23 @@ float Block::MSSIM(Block& other) {
 
   float total = 0.0;
   unsigned int sample = 0;
-  // TODO DRY
-  auto filter_size = this->filter_size;
-  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+  auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
 
-  auto this_sq = Block(this->width);
-  for (auto w = 0u; w < this->width; ++w) {
-    for (auto h = 0u; h < this->height; ++h) {
-      this_sq[{w, h}] = (*this)[{w, h}] * (*this)[{w, h}];
+  auto maltiplied = Block(width_);
+  for (auto w = 0u; w < width_; ++w) {
+    for (auto h = 0u; h < height_; ++h) {
+      maltiplied.Set({w, h}, Get({w, h}) * other.Get({w, h}));
     }
   }
-  auto other_sq = Block(this->width);
-  for (auto w = 0u; w < this->width; ++w) {
-    for (auto h = 0u; h < this->height; ++h) {
-      other_sq[{w, h}] = other[{w, h}] * other[{w, h}];
-    }
-  }
-  auto maltiplied = Block(this->width);
-  for (auto w = 0u; w < this->width; ++w) {
-    for (auto h = 0u; h < this->height; ++h) {
-      maltiplied[{w, h}] = (*this)[{w, h}] * other[{w, h}];
-    }
-  }
-  auto filtered_this = this->Filter();
-  auto filtered_other = other.Filter();
-  auto filtered_this_sq = this_sq.Filter();
-  auto filtered_other_sq = other_sq.Filter();
-  auto filtered_maltiplied = maltiplied.Filter();
 
-  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+  auto filtered_this = *Filter();
+  auto filtered_other = *other.Filter();
+  auto filtered_this_sq = *SQFilter();
+  auto filtered_other_sq = *other.SQFilter();
+  auto filtered_maltiplied = *maltiplied.Filter();
+
+  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       float x = filtered_this[{w, h}];
       float y = filtered_other[{w, h}];
 
@@ -183,3 +241,5 @@ float Block::MSSIM(Block& other) {
 
   return total / sample;
 }
+
+}  // namespace pic2ascii

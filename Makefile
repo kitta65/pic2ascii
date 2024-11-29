@@ -1,6 +1,7 @@
 STB_VERSION = f7f20f39fe4f206c6f19e26ebfef7b261ee59ee4
 CATCH2_VERSION = v3.6.0
 CPP_VERSION = c++20
+FLAG = -DPIC2ASCII_DEBUG
 
 .PHONY: default
 default: bin/main
@@ -23,12 +24,13 @@ libraries/catch_amalgamated.cpp: libraries
 objects/%.o: %.cpp
 	mkdir -p objects/src
 	mkdir -p objects/libraries
-	g++ -std=$(CPP_VERSION) -o $@ -c $< -Wall -Werror
+	g++ $(FLAG) -std=$(CPP_VERSION) -o $@ -c $< -Wall
 
 # NOTE check include statements in .cpp file
-objects/src/main.o: src/block.hpp src/png.hpp
-objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/block.hpp src/png.hpp
-objects/src/block.o: src/block.hpp
+objects/src/main.o: src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp src/main.hpp
+objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
+objects/src/block.o: src/xy.hpp src/matrix.hpp src/block.hpp
+objects/src/matrix.o: src/matrix.hpp
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
 bin/%: objects/src/%.o
@@ -36,20 +38,22 @@ bin/%: objects/src/%.o
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
 # NOTE check include statements in .cpp file
-bin/main: objects/src/block.o objects/src/png.o
-bin/test_other: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
-bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
-bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
+bin/main: objects/src/matrix.o objects/src/block.o objects/src/png.o
+bin/test_other: objects/libraries/catch_amalgamated.o objects/src/matrix.o objects/src/block.o objects/src/png.o
+bin/test_png: objects/libraries/catch_amalgamated.o objects/src/matrix.o objects/src/block.o objects/src/png.o
+bin/test_block: objects/libraries/catch_amalgamated.o objects/src/matrix.o objects/src/block.o
+bin/test_matrix: objects/libraries/catch_amalgamated.o objects/src/matrix.o
 
 .PHONY: run
 run: bin/main
-	./bin/main ./input/sample.png ./output/sample.png --block_width=8
+	./bin/main ./input/sample.png ./output/makefile_run.png --block_width=8
 
 .PHONY: test
-test: bin/test_block bin/test_png bin/test_other
-	./bin/test_other
+test: bin/test_matrix bin/test_block bin/test_png bin/test_other
+	./bin/test_matrix
 	./bin/test_block
 	./bin/test_png
+	./bin/test_other
 
 .PHONY: clean
 clean:

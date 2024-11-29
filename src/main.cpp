@@ -3,14 +3,15 @@
 #include <tuple>
 #include <vector>
 
+#include "xy.hpp"
+#include "matrix.hpp"
 #include "block.hpp"
 #include "png.hpp"
+#include "main.hpp"
 
-std::tuple<std::string, std::string> split(std::string str, std::string ch);
-std::vector<Block> characters(unsigned int block_width);
+namespace pic2ascii {
 
-int main(int argc, char* argv[]) {
-  // handle CLI arguments
+Args::Args(int argc, char* argv[]) {
   auto args = std::vector<std::string>();
   auto flags = std::vector<std::string>();
   for (auto i = 1; i < argc; ++i) {
@@ -22,81 +23,33 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  const char* input_file = NULL;
-  const char* output_file = NULL;
+  input_file_ = "";
+  output_file_ = "";
   switch (args.size()) {
     case 2:
-      output_file = args[1].c_str();
+      output_file_ = args[1];
     case 1:
-      input_file = args[0].c_str();
+      input_file_ = args[0];
       break;
     default:
       std::cerr << "invalid arguments" << std::endl;
-      return EXIT_FAILURE;
+      throw std::runtime_error("the size of blocks does not match");
   }
 
-  unsigned int block_width = 4;  // default
-  auto transparent = false;      // default
+  block_width_ = 16;     // default
+  transparent_ = false;  // default
   for (std::string str : flags) {
     auto tuple = split(str, "=");
     auto flagname = get<0>(tuple);
     auto flagvalue = get<1>(tuple);
     if (flagname == "--block_width") {
-      block_width = atoi(flagvalue.c_str());
+      block_width_ = atoi(flagvalue.c_str());
     } else if (flagname == "--transparent") {
-      transparent = true;
+      transparent_ = true;
     } else {
       std::cerr << "invalid flag" << std::endl;
-      return EXIT_FAILURE;
+      throw std::runtime_error("the size of blocks does not match");
     }
-  }
-
-  // read and edit image
-  auto block = Block(block_width);
-  auto chars = characters(block_width);
-  PNG png(input_file);
-  // (0, y) is scaned twice but don't mind
-  for (auto y = 0u; png.ReadNthBlock(0, y, block); ++y) {
-    for (auto x = 0u; png.ReadNthBlock(x, y, block); ++x) {
-      float max_mssim = 0;
-      auto max_char = PIPE;  // TODO more reasonable default
-      for (auto c : kAllCharacters) {
-        auto char_ = chars[c];
-        auto mssim = block.MSSIM(char_);
-        if (max_mssim < mssim) {
-          max_mssim = mssim;
-          max_char = c;
-        }
-      }
-
-      switch (max_char) {
-        case BACKSLASH:
-          std::cout << "\\";
-          break;
-        case DASH:
-          std::cout << "-";
-          break;
-        case PIPE:
-          std::cout << "|";
-          break;
-        case SLASH:
-          std::cout << "/";
-          break;
-        case SPACE:
-          std::cout << " ";
-          break;
-      }
-
-      if (output_file != NULL) {
-        block.Draw(max_char);
-        png.WriteNthBlock(x, y, block, transparent);
-      }
-    }
-    std::cout << std::endl;
-  }
-
-  if (output_file != NULL) {
-    png.Save(output_file);
   }
 }
 
@@ -115,4 +68,66 @@ std::vector<Block> characters(unsigned int block_width) {
     chars.push_back(char_);
   }
   return chars;
+}
+
+// returning `const char*` is valid here
+// https://stackoverflow.com/questions/2579874/what-is-the-lifetime-of-a-string-literal-returned-by-a-function
+const char* print(Character ch) {
+  switch (ch) {
+    case BACKSLASH:
+      return "\\";
+    case DASH:
+      return "-";
+    case PIPE:
+      return "|";
+    case SLASH:
+      return "/";
+    case SPACE:
+      return " ";
+  }
+
+  throw std::runtime_error("not implemented");
+}
+
+}  // namespace pic2ascii
+
+namespace p2a = pic2ascii;
+
+int main(int argc, char* argv[]) {
+  auto args = p2a::Args(argc, argv);
+
+  auto block = p2a::Block(args.block_width_);
+  auto chars = p2a::characters(args.block_width_);
+  auto results = std::vector<p2a::Character>();
+  p2a::PNG png(args.input_file_.c_str());
+
+  for (auto y = 0u; y <= png.MaxY(block); ++y) {
+    for (auto x = 0u; x <= png.MaxX(block); ++x) {
+      float max_mssim = 0;
+      auto max_char = p2a::SPACE;
+      auto has_content = png.ReadNthBlock(x, y, block);
+      if (has_content) {
+        for (auto c : p2a::kAllCharacters) {
+          auto mssim = block.MSSIM(chars[c]);
+          if (max_mssim < mssim) {
+            max_mssim = mssim;
+            max_char = c;
+          }
+        }
+      }
+
+      std::cout << print(max_char);
+      results.push_back(max_char);
+    }
+    std::cout << std::endl;
+  }
+
+  if (args.output_file_ != "") {
+    const auto size = results.size();
+    for (auto i = 0u; i < size; ++i) {
+      block.Draw(results[i]);
+      png.WriteNthBlock(i, block);
+    }
+    png.Save(args.output_file_.c_str());
+  }
 }
