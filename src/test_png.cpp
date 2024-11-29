@@ -1,5 +1,6 @@
 #include <vector>
 #include "../libraries/catch_amalgamated.hpp"
+#include "matrix.hpp"
 #include "block.hpp"
 #include "png.hpp"
 

@@ -27,7 +27,7 @@ class Block {
   float MSSIM(Block& other);  // structural similarity index measure
 
  private:
-  std::vector<unsigned int> pixels;
+  Matrix pixels;
   void Line(float x1,
             float y1,
             float x2,

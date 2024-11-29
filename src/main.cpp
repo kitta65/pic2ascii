@@ -3,6 +3,7 @@
 #include <tuple>
 #include <vector>
 
+#include "matrix.hpp"
 #include "block.hpp"
 #include "png.hpp"
 #include "main.hpp"

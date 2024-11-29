@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <vector>
+#include "matrix.hpp"
 #include "block.hpp"
 
 namespace pic2ascii {
@@ -17,7 +18,7 @@ Block::Block(unsigned int width) {
 
   this->width = width;
   this->height = width * 2;
-  this->pixels = std::vector<unsigned int>(width * height);
+  pixels = Matrix(width, height * 2);
 
   unsigned int filter_size = width / 4;
   if (filter_size % 2 == 0) {

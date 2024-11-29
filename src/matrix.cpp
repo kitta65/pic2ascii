@@ -5,6 +5,12 @@
 
 namespace pic2ascii {
 
+Matrix::Matrix() {
+  this->width = 0;
+  this->height = 0;
+  this->data = std::vector<unsigned int>(0);
+}
+
 Matrix::Matrix(unsigned int width, unsigned int height) {
   this->width = width;
   this->height = height;

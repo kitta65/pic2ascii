@@ -10,6 +10,7 @@ class Matrix {
   unsigned int height;
   std::vector<unsigned int> data;
 
+  Matrix(); // default constructor is needed for compile
   Matrix(unsigned int width, unsigned int height);
   unsigned int& operator[](unsigned int index);
   unsigned int& operator[](
