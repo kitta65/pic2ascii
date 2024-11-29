@@ -1,6 +1,7 @@
 STB_VERSION = f7f20f39fe4f206c6f19e26ebfef7b261ee59ee4
 CATCH2_VERSION = v3.6.0
 CPP_VERSION = c++20
+FLAG = -DPIC2ASCII_DEBUG
 
 .PHONY: default
 default: bin/main
@@ -23,7 +24,7 @@ libraries/catch_amalgamated.cpp: libraries
 objects/%.o: %.cpp
 	mkdir -p objects/src
 	mkdir -p objects/libraries
-	g++ -std=$(CPP_VERSION) -o $@ -c $< -Wall
+	g++ $(FLAG) -std=$(CPP_VERSION) -o $@ -c $< -Wall
 
 # NOTE check include statements in .cpp file
 objects/src/main.o: src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp src/main.hpp
