@@ -15,8 +15,7 @@ class Block {
   unsigned int filter_size_;
 
   Block(unsigned int width);
-  unsigned int& operator[](
-      std::tuple<unsigned int, unsigned int> xy);  // NOTE (0, 0) is top-left
+  unsigned int& operator[](XY xy);  // NOTE (0, 0) is top-left
   void Clear();
   void Draw(Character ch);
   Block Filter();

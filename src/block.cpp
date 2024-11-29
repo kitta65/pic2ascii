@@ -1,6 +1,7 @@
 #include <stdexcept>
-#include <tuple>
 #include <vector>
+
+#include "xy.hpp"
 #include "matrix.hpp"
 #include "block.hpp"
 
@@ -26,13 +27,11 @@ Block::Block(unsigned int width)
   }
 };
 
-unsigned int& Block::operator[](std::tuple<unsigned int, unsigned int> xy) {
-  const auto x = get<0>(xy);
-  const auto y = get<1>(xy);
-  if (width_ <= x || height_ <= y) {
+unsigned int& Block::operator[](XY xy) {
+  if (width_ <= xy.x || height_ <= xy.y) {
     throw std::runtime_error("out of range");
   }
-  return pixels_[x + y * width_];
+  return pixels_[xy.x + xy.y * width_];
 }
 
 void Block::Clear() {
