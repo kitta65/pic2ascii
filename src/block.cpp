@@ -129,7 +129,7 @@ void Block::Line(float x1, float y1, float x2, float y2) {
   }
 }
 
-Matrix* Block::Filter() {
+Matrix<>* Block::Filter() {
   if (!has_filtered_cache_) {
     MakeFilteredCache();
   }
@@ -137,7 +137,7 @@ Matrix* Block::Filter() {
   return &filtered_pixels_;
 }
 
-Matrix* Block::SQFilter() {
+Matrix<>* Block::SQFilter() {
   if (!has_sq_filtered_cache_) {
     MakeSQFilteredCache();
   }

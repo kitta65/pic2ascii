@@ -24,14 +24,14 @@ class Block {
 
   void Clear();
   void Draw(Character ch);
-  Matrix* Filter();
-  Matrix* SQFilter();
+  Matrix<>* Filter();
+  Matrix<>* SQFilter();
   float MSSIM(Block& other);  // structural similarity index measure
 
  private:
-  Matrix pixels_;  // shouled be accessed by getter / setter
-  Matrix filtered_pixels_;
-  Matrix sq_filtered_pixels_;
+  Matrix<> pixels_;  // shouled be accessed by getter / setter
+  Matrix<> filtered_pixels_;
+  Matrix<> sq_filtered_pixels_;
   void Line(float x1,
             float y1,
             float x2,
