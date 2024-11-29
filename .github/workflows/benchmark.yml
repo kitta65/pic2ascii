@@ -1,5 +1,6 @@
 on:
   pull_request:
+    paths: 'src/**'
 
 jobs:
   benchmark:
@@ -10,4 +11,13 @@ jobs:
           lfs: true
       - run: cargo install --locked hyperfine
       - run: make FLAG=-DPIC2ASCII_RELEASE
-      - run: hyperfine './bin/main input/sample.png --block_width=16'
+      - run: |
+          {
+            echo '```'
+            hyperfine './bin/main input/sample.png --block_width=16'
+            echo '```'
+          } > /tmp/comment.txt
+      - uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: from-actions-comment-pull-request
+          filePath: /tmp/comment.txt
