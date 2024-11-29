@@ -73,6 +73,12 @@ void Block::Draw(Character ch) {
     case SYMBOL_DASH:
       Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
       break;
+    case SYMBOL_HASH:
+      Block::Line(0.25, 0.75, 1 - 0.25, 0.75);
+      Block::Line(0.25, 1.25, 1 - 0.25, 1.25);
+      Block::Line(0.35, 0.45, 0.45, 1.55);
+      Block::Line(0.55, 0.45, 0.65, 1.55);
+      break;
     case SYMBOL_PIPE:
       Block::Line(0.5, 0.1, 0.5, 1.9);
       break;
