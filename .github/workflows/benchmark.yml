@@ -6,6 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - run: cargo install --locked hyperfine
       - run: make FLAG=-DPIC2ASCII_RELEASE
       - run: hyperfine './bin/main input/sample.png --block_width=16'
