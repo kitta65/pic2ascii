@@ -13,7 +13,8 @@ class Block {
   unsigned int width_;
   unsigned int height_;
   unsigned int filter_size_;
-  unsigned int has_cache_;
+  unsigned int has_filtered_cache_;
+  unsigned int has_sq_filtered_cache_;
 
   Block(unsigned int width);
 
@@ -35,7 +36,8 @@ class Block {
             float y1,
             float x2,
             float y2);  // NOTE (0, 0) is bottom-left
-  void MakeCache();
+  void MakeFilteredCache();
+  void MakeSQFilteredCache();
   bool IsOutOfRange(const XY& xy);
 };
 

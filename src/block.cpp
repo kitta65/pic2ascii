@@ -18,7 +18,8 @@ Block::Block(unsigned int width)
     : width_(width),
       height_(width * 2),
       filter_size_(width / 4),
-      has_cache_(false),
+      has_filtered_cache_(false),
+      has_sq_filtered_cache_(false),
       pixels_(width, width * 2),
       filtered_pixels_(width, width * 2),
       sq_filtered_pixels_(width, width * 2) {
@@ -47,7 +48,8 @@ void Block::Set(const XY& xy, unsigned int grayscale) {
   }
 #endif
 
-  has_cache_ = false;
+  has_filtered_cache_ = false;
+  has_sq_filtered_cache_ = false;
   pixels_[xy.x + xy.y * width_] = grayscale;
 }
 
@@ -128,24 +130,42 @@ void Block::Line(float x1, float y1, float x2, float y2) {
 }
 
 Matrix* Block::Filter() {
-  if (!has_cache_) {
-    MakeCache();
-    has_cache_ = true;
+  if (!has_filtered_cache_) {
+    MakeFilteredCache();
   }
 
   return &filtered_pixels_;
 }
 
 Matrix* Block::SQFilter() {
-  if (!has_cache_) {
-    MakeCache();
-    has_cache_ = true;
+  if (!has_sq_filtered_cache_) {
+    MakeSQFilteredCache();
   }
 
   return &sq_filtered_pixels_;
 }
 
-void Block::MakeCache() {
+void Block::MakeFilteredCache() {
+  const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
+  const auto sq_filter_size = sq(filter_size_);
+
+  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
+      // calculate average in the window
+      unsigned int filtered_sum = 0u;
+      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
+        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
+          filtered_sum += Get({x, y});
+        }
+      }
+      filtered_pixels_[{w, h}] = filtered_sum / sq_filter_size;
+    }
+  }
+
+  has_filtered_cache_ = true;
+}
+
+void Block::MakeSQFilteredCache() {
   const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
   const auto sq_filter_size = sq(filter_size_);
 
@@ -159,18 +179,17 @@ void Block::MakeCache() {
   for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
     for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       // calculate average in the window
-      unsigned int filtered_sum = 0u;
       unsigned int sq_filtered_sum = 0u;
       for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
         for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
-          filtered_sum += Get({x, y});
           sq_filtered_sum += sq_pixels[{x, y}];
         }
       }
-      filtered_pixels_[{w, h}] = filtered_sum / sq_filter_size;
       sq_filtered_pixels_[{w, h}] = sq_filtered_sum / sq_filter_size;
     }
   }
+
+  has_sq_filtered_cache_ = true;
 }
 
 float Block::MSSIM(Block& other) {
