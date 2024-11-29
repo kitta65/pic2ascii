@@ -82,10 +82,16 @@ const char* print(Character ch) {
       return "-";
     case SYMBOL_HASH:
       return "#";
+    case SYMBOL_LARGER:
+      return ">";
+    case SYMBOL_PLUS:
+      return "+";
     case SYMBOL_PIPE:
       return "|";
     case SYMBOL_SLASH:
       return "/";
+    case SYMBOL_SMALLER:
+      return "<";
     case SYMBOL_SPACE:
       return " ";
     case SYMBOL_UNDERSCORE:

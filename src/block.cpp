@@ -83,11 +83,23 @@ void Block::Draw(Character ch) {
       Block::Line(0.35, 0.45, 0.45, 1.55);
       Block::Line(0.55, 0.45, 0.65, 1.55);
       break;
+    case SYMBOL_LARGER:
+      Block::Line(0.25, 1.47, 0.75, 0.97);
+      Block::Line(0.25, 0.53, 0.75, 1.03);
+      break;
+    case SYMBOL_PLUS:
+      Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
+      Block::Line(0.5, 0.625, 0.5, 1.375);
+      break;
     case SYMBOL_PIPE:
       Block::Line(0.5, 0.1, 0.5, 1.9);
       break;
     case SYMBOL_SLASH:
       Block::Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
+      break;
+    case SYMBOL_SMALLER:
+      Block::Line(0.25, 0.97, 0.75, 1.47);
+      Block::Line(0.25, 1.03, 0.75, 0.53);
       break;
     case SYMBOL_SPACE:
       break;
