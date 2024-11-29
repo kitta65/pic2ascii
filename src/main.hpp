@@ -2,10 +2,10 @@ namespace pic2ascii {
 
 class Args {
  public:
-  std::string input_file;
-  std::string output_file;
-  unsigned int block_width;
-  bool transparent;
+  std::string input_file_;
+  std::string output_file_;
+  unsigned int block_width_;
+  bool transparent_;
   Args(int argc, char* argv[]);
 };
 

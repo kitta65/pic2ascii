@@ -22,29 +22,29 @@ Args::Args(int argc, char* argv[]) {
     }
   }
 
-  this->input_file = "";
-  this->output_file = "";
+  input_file_ = "";
+  output_file_ = "";
   switch (args.size()) {
     case 2:
-      this->output_file = args[1];
+      output_file_ = args[1];
     case 1:
-      this->input_file = args[0];
+      input_file_ = args[0];
       break;
     default:
       std::cerr << "invalid arguments" << std::endl;
       throw std::runtime_error("the size of blocks does not match");
   }
 
-  this->block_width = 16;     // default
-  this->transparent = false;  // default
+  block_width_ = 16;     // default
+  transparent_ = false;  // default
   for (std::string str : flags) {
     auto tuple = split(str, "=");
     auto flagname = get<0>(tuple);
     auto flagvalue = get<1>(tuple);
     if (flagname == "--block_width") {
-      this->block_width = atoi(flagvalue.c_str());
+      block_width_ = atoi(flagvalue.c_str());
     } else if (flagname == "--transparent") {
-      this->transparent = true;
+      transparent_ = true;
     } else {
       std::cerr << "invalid flag" << std::endl;
       throw std::runtime_error("the size of blocks does not match");
@@ -95,10 +95,10 @@ namespace p2a = pic2ascii;
 int main(int argc, char* argv[]) {
   auto args = p2a::Args(argc, argv);
 
-  auto block = p2a::Block(args.block_width);
-  auto chars = p2a::characters(args.block_width);
+  auto block = p2a::Block(args.block_width_);
+  auto chars = p2a::characters(args.block_width_);
   auto results = std::vector<p2a::Character>();
-  p2a::PNG png(args.input_file.c_str());
+  p2a::PNG png(args.input_file_.c_str());
 
   for (auto y = 0u; y <= png.MaxY(block); ++y) {
     for (auto x = 0u; x <= png.MaxX(block); ++x) {
@@ -121,12 +121,12 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl;
   }
 
-  if (args.output_file != "") {
+  if (args.output_file_ != "") {
     const auto size = results.size();
     for (auto i = 0u; i < size; ++i) {
       block.Draw(results[i]);
       png.WriteNthBlock(i, block);
     }
-    png.Save(args.output_file.c_str());
+    png.Save(args.output_file_.c_str());
   }
 }
