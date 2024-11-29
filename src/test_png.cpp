@@ -28,8 +28,8 @@ TEST_CASE("ReadNthBlock remainder != 0") {
   for (auto i = 0u; i < 8; ++i) {
     REQUIRE_NOTHROW(png.ReadNthBlock(i, block));
   }
-  REQUIRE(block[{1, 1}] == 0);    // should be black
-  REQUIRE(block[{2, 2}] == 255);  // should be white
+  REQUIRE(block.Get({1, 1}) == 0);    // should be black
+  REQUIRE(block.Get({2, 2}) == 255);  // should be white
   REQUIRE_THROWS(png.ReadNthBlock(8, block));
 }
 

@@ -13,9 +13,9 @@ TEST_CASE("construct block") {
   REQUIRE(block.filter_size_ == 3);
 }
 
-TEST_CASE("operator[]") {
+TEST_CASE("getter") {
   p2a::Block block(1);
-  REQUIRE_THROWS(block[{1, 1}]);
+  REQUIRE_THROWS(block.Get({1, 1}));
 }
 
 TEST_CASE("draw characters") {
@@ -30,10 +30,10 @@ TEST_CASE("draw characters") {
 TEST_CASE("filter") {
   p2a::Block original(12);  // filter_size should be 3
   original.Clear();
-  original[{1, 1}] = 255 - 18;
+  original.Set({1, 1}, 255 - 18);
 
   auto filtered = original.Filter();
-  unsigned int expected = filtered[{1, 1}];
+  unsigned int expected = (*filtered)[{1, 1}];
   REQUIRE(expected == 255 - 2);
 }
 
@@ -49,8 +49,8 @@ TEST_CASE("MSSIM 1.0") {
   p2a::Block block_y(width);
   for (auto w = 0u; w < block_x.width_; ++w) {
     for (auto h = 0u; h < block_x.height_; ++h) {
-      block_x[{w, h}] = 0;
-      block_y[{w, h}] = 0;
+      block_x.Set({w, h}, 0);
+      block_y.Set({w, h}, 0);
     }
   }
   auto mssim = block_x.MSSIM(block_y);
@@ -63,8 +63,8 @@ TEST_CASE("MSSIM 0.0") {
   p2a::Block block_y(width);
   for (auto w = 0u; w < block_x.width_; ++w) {
     for (auto h = 0u; h < block_x.height_; ++h) {
-      block_x[{w, h}] = 0;
-      block_y[{w, h}] = 255;
+      block_x.Set({w, h}, 0);
+      block_y.Set({w, h}, 255);
     }
   }
   auto mssim = block_x.MSSIM(block_y);

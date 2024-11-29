@@ -18,7 +18,10 @@ Block::Block(unsigned int width)
     : width_(width),
       height_(width * 2),
       filter_size_(width / 4),
-      pixels_(width, width * 2) {
+      has_cache_(false),
+      pixels_(width, width * 2),
+      filtered_pixels_(width, width * 2),
+      sq_filtered_pixels_(width, width * 2) {
   if (width_ <= 0) {
     throw std::logic_error("width should be greater than 0");
   }
@@ -27,16 +30,39 @@ Block::Block(unsigned int width)
   }
 };
 
-unsigned int& Block::operator[](const XY& xy) {
-  if (width_ <= xy.x || height_ <= xy.y) {
+unsigned int& Block::Get(const XY& xy) {
+#ifndef PIC2ASCII_RELEASE
+  if (IsOutOfRange(xy)) {
     throw std::runtime_error("out of range");
   }
+#endif
+
   return pixels_[xy.x + xy.y * width_];
 }
 
+void Block::Set(const XY& xy, unsigned int grayscale) {
+#ifndef PIC2ASCII_RELEASE
+  if (IsOutOfRange(xy)) {
+    throw std::runtime_error("out of range");
+  }
+#endif
+
+  has_cache_ = false;
+  pixels_[xy.x + xy.y * width_] = grayscale;
+}
+
+bool Block::IsOutOfRange(const XY& xy) {
+  if (width_ <= xy.x || height_ <= xy.y) {
+    return true;
+  }
+  return false;
+}
+
 void Block::Clear() {
-  for (unsigned int i = 0; i < width_ * height_; ++i) {
-    pixels_[i] = 255;
+  for (unsigned int h = 0u; h < height_; ++h) {
+    for (unsigned int w = 0u; w < width_; ++w) {
+      Set({w, h}, 255);
+    }
   }
 }
 
@@ -96,29 +122,55 @@ void Block::Line(float x1, float y1, float x2, float y2) {
         continue;
       }
 
-      (*this)[{x_, y_}] = 0;
+      Set({x_, y_}, 0);
     }
   }
 }
 
-Block Block::Filter() {
-  Block block(width_);
-  auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
+Matrix* Block::Filter() {
+  if (!has_cache_) {
+    MakeCache();
+    has_cache_ = true;
+  }
+
+  return &filtered_pixels_;
+}
+
+Matrix* Block::SQFilter() {
+  if (!has_cache_) {
+    MakeCache();
+    has_cache_ = true;
+  }
+
+  return &sq_filtered_pixels_;
+}
+
+void Block::MakeCache() {
+  const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
+  const auto sq_filter_size = sq(filter_size_);
+
+  Matrix sq_pixels(width_, height_);
+  for (auto w = 0u; w < width_; ++w) {
+    for (auto h = 0u; h < height_; ++h) {
+      sq_pixels[{w, h}] = sq(Get({w, h}));
+    }
+  }
 
   for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
     for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       // calculate average in the window
-      unsigned int sum = 0u;
+      unsigned int filtered_sum = 0u;
+      unsigned int sq_filtered_sum = 0u;
       for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
         for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
-          sum += (*this)[{x, y}];
+          filtered_sum += Get({x, y});
+          sq_filtered_sum += sq_pixels[{x, y}];
         }
       }
-      block[{w, h}] = sum / sq(filter_size_);
+      filtered_pixels_[{w, h}] = filtered_sum / sq_filter_size;
+      sq_filtered_pixels_[{w, h}] = sq_filtered_sum / sq_filter_size;
     }
   }
-
-  return block;
 }
 
 float Block::MSSIM(Block& other) {
@@ -135,29 +187,18 @@ float Block::MSSIM(Block& other) {
   unsigned int sample = 0;
   auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
 
-  auto this_sq = Block(width_);
-  for (auto w = 0u; w < width_; ++w) {
-    for (auto h = 0u; h < height_; ++h) {
-      this_sq[{w, h}] = sq((*this)[{w, h}]);
-    }
-  }
-  auto other_sq = Block(width_);
-  for (auto w = 0u; w < width_; ++w) {
-    for (auto h = 0u; h < height_; ++h) {
-      other_sq[{w, h}] = sq(other[{w, h}]);
-    }
-  }
   auto maltiplied = Block(width_);
   for (auto w = 0u; w < width_; ++w) {
     for (auto h = 0u; h < height_; ++h) {
-      maltiplied[{w, h}] = (*this)[{w, h}] * other[{w, h}];
+      maltiplied.Set({w, h}, Get({w, h}) * other.Get({w, h}));
     }
   }
-  auto filtered_this = this->Filter();
-  auto filtered_other = other.Filter();  // TODO use cached result
-  auto filtered_this_sq = this_sq.Filter();
-  auto filtered_other_sq = other_sq.Filter();  // TODO use cached result
-  auto filtered_maltiplied = maltiplied.Filter();
+
+  auto filtered_this = *Filter();
+  auto filtered_other = *other.Filter();
+  auto filtered_this_sq = *SQFilter();
+  auto filtered_other_sq = *other.SQFilter();
+  auto filtered_maltiplied = *maltiplied.Filter();
 
   for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
     for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {

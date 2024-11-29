@@ -69,17 +69,17 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
     for (auto pixel_x = 0u; pixel_x < block.width_; ++pixel_x) {
       if (width_ <= block_x * block.width_ + pixel_x ||
           height_ <= block_y * block.height_ + pixel_y) {
-        block[{pixel_x, pixel_y}] = 255;
+        block.Set({pixel_x, pixel_y}, 255);
       } else if (data_[base_idx + 3] <= 127) {  // if transparent
-        block[{pixel_x, pixel_y}] = 255;
+        block.Set({pixel_x, pixel_y}, 255);
       } else {
         auto grayscale = 0.299 * data_[base_idx + offset_idx + 0] +
                          0.587 * data_[base_idx + offset_idx + 1] +
                          0.114 * data_[base_idx + offset_idx + 2];
-        block[{pixel_x, pixel_y}] = grayscale;
+        block.Set({pixel_x, pixel_y}, grayscale);
       }
 
-      if (block[{pixel_x, pixel_y}] < 255) {
+      if (block.Get({pixel_x, pixel_y}) < 255) {
         has_content = true;
       }
       offset_idx += kNumChannels;
@@ -107,7 +107,7 @@ void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {
           height_ <= block_y * block.height_ + pixel_y) {
         // NOP
       } else {
-        unsigned char grayscale = block[{pixel_x, pixel_y}];
+        unsigned char grayscale = block.Get({pixel_x, pixel_y});
         data_[base_idx + offset_idx + 0] = grayscale;
         data_[base_idx + offset_idx + 1] = grayscale;
         data_[base_idx + offset_idx + 2] = grayscale;

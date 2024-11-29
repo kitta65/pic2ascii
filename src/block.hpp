@@ -13,20 +13,30 @@ class Block {
   unsigned int width_;
   unsigned int height_;
   unsigned int filter_size_;
+  unsigned int has_cache_;
 
   Block(unsigned int width);
-  unsigned int& operator[](const XY& xy);  // NOTE (0, 0) is top-left
+
+  // NOTE (0, 0) is top-left
+  unsigned int& Get(const XY& xy);
+  void Set(const XY& xy, unsigned int grayscale);
+
   void Clear();
   void Draw(Character ch);
-  Block Filter();
+  Matrix* Filter();
+  Matrix* SQFilter();
   float MSSIM(Block& other);  // structural similarity index measure
 
  private:
-  Matrix pixels_;
+  Matrix pixels_;  // shouled be accessed by getter / setter
+  Matrix filtered_pixels_;
+  Matrix sq_filtered_pixels_;
   void Line(float x1,
             float y1,
             float x2,
             float y2);  // NOTE (0, 0) is bottom-left
+  void MakeCache();
+  bool IsOutOfRange(const XY& xy);
 };
 
 }  // namespace pic2ascii
