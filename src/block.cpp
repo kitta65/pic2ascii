@@ -7,7 +7,8 @@ namespace pic2ascii {
 
 const float kLineThickness = 0.1;  // 1.0 is the width of Block
 
-float sq(float f) {
+template <typename T>
+float sq(T f) {
   return f * f;
 }
 
@@ -142,13 +143,13 @@ float Block::MSSIM(Block& other) {
   auto this_sq = Block(this->width);
   for (auto w = 0u; w < this->width; ++w) {
     for (auto h = 0u; h < this->height; ++h) {
-      this_sq[{w, h}] = (*this)[{w, h}] * (*this)[{w, h}];
+      this_sq[{w, h}] = sq((*this)[{w, h}]);
     }
   }
   auto other_sq = Block(this->width);
   for (auto w = 0u; w < this->width; ++w) {
     for (auto h = 0u; h < this->height; ++h) {
-      other_sq[{w, h}] = other[{w, h}] * other[{w, h}];
+      other_sq[{w, h}] = sq(other[{w, h}]);
     }
   }
   auto maltiplied = Block(this->width);
