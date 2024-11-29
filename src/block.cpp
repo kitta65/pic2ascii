@@ -68,47 +68,47 @@ void Block::Draw(Character ch) {
 
   switch (ch) {
     case SYMBOL_BACKSLASH:
-      Block::Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
+      Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
     case SYMBOL_CARET:
-      Block::Line(0.1, 1.25, 0.5275, 1.7775);
-      Block::Line(0.4725, 1.7775, 0.9, 1.25);
+      Line(0.1, 1.25, 0.5275, 1.7775);
+      Line(0.4725, 1.7775, 0.9, 1.25);
       break;
     case SYMBOL_DASH:
-      Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
+      Line(0.125, 1.0, 1 - 0.125, 1.0);
       break;
     case SYMBOL_EQUAL:
-      Block::Line(0.125, 1.23, 1 - 0.125, 1.23);
-      Block::Line(0.125, 0.77, 1 - 0.125, 0.77);
+      Line(0.125, 1.23, 1 - 0.125, 1.23);
+      Line(0.125, 0.77, 1 - 0.125, 0.77);
       break;
     case SYMBOL_HASH:
-      Block::Line(0.25, 0.75, 1 - 0.25, 0.75);
-      Block::Line(0.25, 1.25, 1 - 0.25, 1.25);
-      Block::Line(0.35, 0.45, 0.45, 1.55);
-      Block::Line(0.55, 0.45, 0.65, 1.55);
+      Line(0.25, 0.75, 1 - 0.25, 0.75);
+      Line(0.25, 1.25, 1 - 0.25, 1.25);
+      Line(0.35, 0.45, 0.45, 1.55);
+      Line(0.55, 0.45, 0.65, 1.55);
       break;
     case SYMBOL_LARGER:
-      Block::Line(0.25, 1.47, 0.75, 0.97);
-      Block::Line(0.25, 0.53, 0.75, 1.03);
+      Line(0.25, 1.47, 0.75, 0.97);
+      Line(0.25, 0.53, 0.75, 1.03);
       break;
     case SYMBOL_PLUS:
-      Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
-      Block::Line(0.5, 0.625, 0.5, 1.375);
+      Line(0.125, 1.0, 1 - 0.125, 1.0);
+      Line(0.5, 0.625, 0.5, 1.375);
       break;
     case SYMBOL_PIPE:
-      Block::Line(0.5, 0.1, 0.5, 1.9);
+      Line(0.5, 0.1, 0.5, 1.9);
       break;
     case SYMBOL_SLASH:
-      Block::Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
+      Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
       break;
     case SYMBOL_SMALLER:
-      Block::Line(0.25, 0.97, 0.75, 1.47);
-      Block::Line(0.25, 1.03, 0.75, 0.53);
+      Line(0.25, 0.97, 0.75, 1.47);
+      Line(0.25, 1.03, 0.75, 0.53);
       break;
     case SYMBOL_SPACE:
       break;
     case SYMBOL_UNDERSCORE:
-      Block::Line(0.125, 0.125, 1 - 0.125, 0.125);
+      Line(0.125, 0.125, 1 - 0.125, 0.125);
       break;
     default:
       throw std::logic_error("not implemented");
