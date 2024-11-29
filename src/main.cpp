@@ -74,16 +74,18 @@ std::vector<Block> characters(unsigned int block_width) {
 // https://stackoverflow.com/questions/2579874/what-is-the-lifetime-of-a-string-literal-returned-by-a-function
 const char* print(Character ch) {
   switch (ch) {
-    case BACKSLASH:
+    case SYMBOL_BACKSLASH:
       return "\\";
-    case DASH:
+    case SYMBOL_DASH:
       return "-";
-    case PIPE:
+    case SYMBOL_PIPE:
       return "|";
-    case SLASH:
+    case SYMBOL_SLASH:
       return "/";
-    case SPACE:
+    case SYMBOL_SPACE:
       return " ";
+    case SYMBOL_UNDERSCORE:
+      return "_";
   }
 
   throw std::runtime_error("not implemented");
@@ -104,7 +106,7 @@ int main(int argc, char* argv[]) {
   for (auto y = 0u; y <= png.MaxY(block); ++y) {
     for (auto x = 0u; x <= png.MaxX(block); ++x) {
       float max_mssim = 0;
-      auto max_char = p2a::SPACE;
+      auto max_char = p2a::SYMBOL_SPACE;
       auto has_content = png.ReadNthBlock(x, y, block);
       if (has_content) {
         for (auto c : p2a::kAllCharacters) {

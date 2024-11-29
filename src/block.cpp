@@ -67,19 +67,22 @@ void Block::Draw(Character ch) {
   Block::Clear();
 
   switch (ch) {
-    case BACKSLASH:
+    case SYMBOL_BACKSLASH:
       Block::Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
-    case DASH:
+    case SYMBOL_DASH:
       Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
       break;
-    case PIPE:
+    case SYMBOL_PIPE:
       Block::Line(0.5, 0.1, 0.5, 1.9);
       break;
-    case SLASH:
+    case SYMBOL_SLASH:
       Block::Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
       break;
-    case SPACE:
+    case SYMBOL_SPACE:
+      break;
+    case SYMBOL_UNDERSCORE:
+      Block::Line(0.125, 0.125, 1 - 0.125, 0.125);
       break;
     default:
       throw std::logic_error("not implemented");

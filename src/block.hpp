@@ -3,7 +3,14 @@
 
 namespace pic2ascii {
 
-#define ALL_CHARACTERS {BACKSLASH, DASH, PIPE, SLASH, SPACE}
+#define ALL_CHARACTERS { \
+  SYMBOL_BACKSLASH, \
+  SYMBOL_DASH, \
+  SYMBOL_PIPE, \
+  SYMBOL_SLASH, \
+  SYMBOL_SPACE, \
+  SYMBOL_UNDERSCORE \
+}
 enum Character ALL_CHARACTERS;
 const Character kAllCharacters[] = ALL_CHARACTERS;
 #undef ALL_CHARACTERS
