@@ -80,6 +80,8 @@ const char* print(Character ch) {
       return "^";
     case SYMBOL_DASH:
       return "-";
+    case SYMBOL_EQUAL:
+      return "=";
     case SYMBOL_HASH:
       return "#";
     case SYMBOL_LARGER:

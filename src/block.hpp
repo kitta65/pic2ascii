@@ -7,6 +7,7 @@ namespace pic2ascii {
   SYMBOL_BACKSLASH, \
   SYMBOL_CARET, \
   SYMBOL_DASH, \
+  SYMBOL_EQUAL, \
   SYMBOL_HASH, \
   SYMBOL_LARGER, \
   SYMBOL_PIPE, \
