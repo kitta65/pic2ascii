@@ -15,9 +15,9 @@ const Character kAllCharacters[] = ALL_CHARACTERS;
 
 class Block {
  public:
-  unsigned int width;
-  unsigned int height;
-  unsigned int filter_size;
+  unsigned int width_;
+  unsigned int height_;
+  unsigned int filter_size_;
 
   Block(unsigned int width);
   unsigned int& operator[](XY xy);  // NOTE (0, 0) is top-left
@@ -27,7 +27,7 @@ class Block {
   float MSSIM(Block& other);  // structural similarity index measure
 
  private:
-  Matrix pixels;
+  Matrix pixels_;
   void Line(float x1,
             float y1,
             float x2,

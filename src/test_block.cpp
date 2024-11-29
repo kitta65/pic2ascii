@@ -7,9 +7,9 @@ namespace p2a = pic2ascii;
 
 TEST_CASE("construct block") {
   p2a::Block block(12);
-  REQUIRE(block.width == 12);
-  REQUIRE(block.height == 24);
-  REQUIRE(block.filter_size == 3);
+  REQUIRE(block.width_ == 12);
+  REQUIRE(block.height_ == 24);
+  REQUIRE(block.filter_size_ == 3);
 }
 
 TEST_CASE("operator[]") {
@@ -46,8 +46,8 @@ TEST_CASE("MSSIM 1.0") {
   const unsigned int width = 16;
   p2a::Block block_x(width);
   p2a::Block block_y(width);
-  for (auto w = 0u; w < block_x.width; ++w) {
-    for (auto h = 0u; h < block_x.height; ++h) {
+  for (auto w = 0u; w < block_x.width_; ++w) {
+    for (auto h = 0u; h < block_x.height_; ++h) {
       block_x[{w, h}] = 0;
       block_y[{w, h}] = 0;
     }
@@ -60,8 +60,8 @@ TEST_CASE("MSSIM 0.0") {
   const unsigned int width = 16;
   p2a::Block block_x(width);
   p2a::Block block_y(width);
-  for (auto w = 0u; w < block_x.width; ++w) {
-    for (auto h = 0u; h < block_x.height; ++h) {
+  for (auto w = 0u; w < block_x.width_; ++w) {
+    for (auto h = 0u; h < block_x.height_; ++h) {
       block_x[{w, h}] = 0;
       block_y[{w, h}] = 255;
     }

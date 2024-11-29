@@ -12,34 +12,31 @@ float sq(T f) {
   return f * f;
 }
 
-Block::Block(unsigned int width) {
-  if (width <= 0) {
+Block::Block(unsigned int width)
+    : width_(width),
+      height_(width * 2),
+      filter_size_(width / 4),
+      pixels_(width, width * 2) {
+  if (width_ <= 0) {
     throw std::logic_error("width should be greater than 0");
   }
-
-  this->width = width;
-  this->height = width * 2;
-  pixels = Matrix(width, height * 2);
-
-  unsigned int filter_size = width / 4;
-  if (filter_size % 2 == 0) {
-    filter_size += 1;  // should be odd number
+  if (filter_size_ % 2 == 0) {
+    filter_size_ += 1;  // should be odd number
   }
-  this->filter_size = filter_size;
 };
 
 unsigned int& Block::operator[](XY xy) {
-  if (this->width <= xy.x || this->height <= xy.y) {
+  if (width_ <= xy.x || height_ <= xy.y) {
     throw std::runtime_error("out of range");
   }
   unsigned int x = xy.x;
   unsigned int y = xy.y;
-  return this->pixels[x + y * this->width];
+  return pixels_[x + y * width_];
 }
 
 void Block::Clear() {
-  for (unsigned int i = 0; i < this->width * this->height; ++i) {
-    pixels[i] = 255;
+  for (unsigned int i = 0; i < width_ * height_; ++i) {
+    pixels_[i] = 255;
   }
 }
 
@@ -72,11 +69,11 @@ void Block::Line(float x1, float y1, float x2, float y2) {
   const float b1 = x1 - x2;
   const float c1 = x2 * y1 - x1 * y2;
 
-  for (unsigned int x_ = 0; x_ < this->width; ++x_) {
-    float x = static_cast<float>(x_) / this->width;
+  for (unsigned int x_ = 0; x_ < width_; ++x_) {
+    float x = static_cast<float>(x_) / width_;
 
-    for (unsigned int y_ = 0; y_ < this->height; ++y_) {
-      float y = 2 - 2 * static_cast<float>(y_) / this->height;
+    for (unsigned int y_ = 0; y_ < height_; ++y_) {
+      float y = 2 - 2 * static_cast<float>(y_) / height_;
       float d_sq =
           ((a1 * a1 * x * x) + (b1 * b1 * y * y) + (2 * a1 * b1 * x * y) +
            (2 * a1 * c1 * x) + (2 * b1 * c1 * y) + (c1 * c1)) /
@@ -105,12 +102,11 @@ void Block::Line(float x1, float y1, float x2, float y2) {
 }
 
 Block Block::Filter() {
-  Block block(this->width);
-  auto filter_size = this->filter_size;
-  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+  Block block(width_);
+  auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
 
-  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       // calculate average in the window
       unsigned int sum = 0u;
       for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
@@ -118,7 +114,7 @@ Block Block::Filter() {
           sum += (*this)[{x, y}];
         }
       }
-      block[{w, h}] = sum / (filter_size * filter_size);
+      block[{w, h}] = sum / sq(filter_size_);
     }
   }
 
@@ -126,7 +122,7 @@ Block Block::Filter() {
 }
 
 float Block::MSSIM(Block& other) {
-  if (this->width != other.width || this->height != other.height) {
+  if (width_ != other.width_ || height_ != other.height_) {
     throw std::runtime_error("the size of blocks does not match");
   }
 
@@ -137,24 +133,23 @@ float Block::MSSIM(Block& other) {
 
   float total = 0.0;
   unsigned int sample = 0;
-  auto filter_size = this->filter_size;
-  auto filter_offset = (filter_size - 1) / 2;  // >= 0
+  auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
 
-  auto this_sq = Block(this->width);
-  for (auto w = 0u; w < this->width; ++w) {
-    for (auto h = 0u; h < this->height; ++h) {
+  auto this_sq = Block(width_);
+  for (auto w = 0u; w < width_; ++w) {
+    for (auto h = 0u; h < height_; ++h) {
       this_sq[{w, h}] = sq((*this)[{w, h}]);
     }
   }
-  auto other_sq = Block(this->width);
-  for (auto w = 0u; w < this->width; ++w) {
-    for (auto h = 0u; h < this->height; ++h) {
+  auto other_sq = Block(width_);
+  for (auto w = 0u; w < width_; ++w) {
+    for (auto h = 0u; h < height_; ++h) {
       other_sq[{w, h}] = sq(other[{w, h}]);
     }
   }
-  auto maltiplied = Block(this->width);
-  for (auto w = 0u; w < this->width; ++w) {
-    for (auto h = 0u; h < this->height; ++h) {
+  auto maltiplied = Block(width_);
+  for (auto w = 0u; w < width_; ++w) {
+    for (auto h = 0u; h < height_; ++h) {
       maltiplied[{w, h}] = (*this)[{w, h}] * other[{w, h}];
     }
   }
@@ -164,8 +159,8 @@ float Block::MSSIM(Block& other) {
   auto filtered_other_sq = other_sq.Filter();  // TODO use cached result
   auto filtered_maltiplied = maltiplied.Filter();
 
-  for (auto w = filter_offset; w < (this->width - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (this->height - filter_offset); ++h) {
+  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       float x = filtered_this[{w, h}];
       float y = filtered_other[{w, h}];
 

@@ -34,8 +34,8 @@ PNG::~PNG() {
 }
 
 unsigned int PNG::MaxX(const Block& block) {
-  auto max_block_x = this->width / block.width;
-  if (this->width % block.width == 0) {
+  auto max_block_x = this->width / block.width_;
+  if (this->width % block.width_ == 0) {
     --max_block_x;
   }
 
@@ -43,8 +43,8 @@ unsigned int PNG::MaxX(const Block& block) {
 }
 
 unsigned int PNG::MaxY(const Block& block) {
-  auto max_block_y = this->height / block.height;
-  if (this->height % block.height == 0) {
+  auto max_block_y = this->height / block.height_;
+  if (this->height % block.height_ == 0) {
     --max_block_y;
   }
   return max_block_y;
@@ -55,7 +55,7 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
-      (block_x * block.width + block_y * block.height * this->width) *
+      (block_x * block.width_ + block_y * block.height_ * this->width) *
       kNumChannels;
 
   if (this->width * this->height * kNumChannels <= base_idx) {
@@ -63,11 +63,11 @@ bool PNG::ReadNthBlock(unsigned int index, Block& block) {
   }
 
   auto has_content = false;
-  for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
+  for (auto pixel_y = 0u; pixel_y < block.height_; ++pixel_y) {
     auto offset_idx = pixel_y * width * kNumChannels;
-    for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
-      if (this->width <= block_x * block.width + pixel_x ||
-          this->height <= block_y * block.height + pixel_y) {
+    for (auto pixel_x = 0u; pixel_x < block.width_; ++pixel_x) {
+      if (this->width <= block_x * block.width_ + pixel_x ||
+          this->height <= block_y * block.height_ + pixel_y) {
         block[{pixel_x, pixel_y}] = 255;
       } else if (this->data[base_idx + 3] <= 127) {  // if transparent
         block[{pixel_x, pixel_y}] = 255;
@@ -96,14 +96,14 @@ void PNG::WriteNthBlock(unsigned int index, Block& block, bool transparent) {
   const auto block_x = index % (max_block_x + 1);
   const auto block_y = index / (max_block_x + 1);
   const auto base_idx =
-      (block_x * block.width + block_y * block.height * this->width) *
+      (block_x * block.width_ + block_y * block.height_ * this->width) *
       kNumChannels;
 
-  for (auto pixel_y = 0u; pixel_y < block.height; ++pixel_y) {
+  for (auto pixel_y = 0u; pixel_y < block.height_; ++pixel_y) {
     auto offset_idx = pixel_y * width * kNumChannels;
-    for (auto pixel_x = 0u; pixel_x < block.width; ++pixel_x) {
-      if (this->width <= block_x * block.width + pixel_x ||
-          this->height <= block_y * block.height + pixel_y) {
+    for (auto pixel_x = 0u; pixel_x < block.width_; ++pixel_x) {
+      if (this->width <= block_x * block.width_ + pixel_x ||
+          this->height <= block_y * block.height_ + pixel_y) {
         // NOP
       } else {
         unsigned char grayscale = block[{pixel_x, pixel_y}];
