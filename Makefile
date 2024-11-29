@@ -30,7 +30,10 @@ objects/%.o: %.cpp
 objects/src/main.o: src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp src/main.hpp
 objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
 objects/src/block.o: src/xy.hpp src/matrix.hpp src/block.hpp
-objects/src/matrix.o: src/matrix.hpp
+objects/src/test_matrix.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp
+objects/src/test_block.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp
+objects/src/test_png.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
+objects/src/test_other.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
 
 bin/%: objects/src/%.o
@@ -38,11 +41,11 @@ bin/%: objects/src/%.o
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
 # NOTE check include statements in .cpp file
-bin/main: objects/src/matrix.o objects/src/block.o objects/src/png.o
-bin/test_other: objects/libraries/catch_amalgamated.o objects/src/matrix.o objects/src/block.o objects/src/png.o
-bin/test_png: objects/libraries/catch_amalgamated.o objects/src/matrix.o objects/src/block.o objects/src/png.o
-bin/test_block: objects/libraries/catch_amalgamated.o objects/src/matrix.o objects/src/block.o
-bin/test_matrix: objects/libraries/catch_amalgamated.o objects/src/matrix.o
+bin/main: objects/src/block.o objects/src/png.o
+bin/test_other: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
+bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
+bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
+bin/test_matrix: objects/libraries/catch_amalgamated.o
 
 .PHONY: run
 run: bin/main

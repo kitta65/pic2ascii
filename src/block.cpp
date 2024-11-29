@@ -9,11 +9,6 @@ namespace pic2ascii {
 
 const float kLineThickness = 0.1;  // 1.0 is the width of Block
 
-template <typename T>
-float sq(T f) {
-  return f * f;
-}
-
 Block::Block(unsigned int width)
     : width_(width),
       height_(width * 2),
@@ -31,7 +26,7 @@ Block::Block(unsigned int width)
   }
 };
 
-unsigned int& Block::Get(const XY& xy) {
+uint8_t& Block::Get(const XY& xy) {
 #ifndef PIC2ASCII_RELEASE
   if (IsOutOfRange(xy)) {
     throw std::runtime_error("out of range");
@@ -41,7 +36,7 @@ unsigned int& Block::Get(const XY& xy) {
   return pixels_[xy.x + xy.y * width_];
 }
 
-void Block::Set(const XY& xy, unsigned int grayscale) {
+void Block::Set(const XY& xy, uint8_t grayscale) {
 #ifndef PIC2ASCII_RELEASE
   if (IsOutOfRange(xy)) {
     throw std::runtime_error("out of range");
@@ -129,7 +124,7 @@ void Block::Line(float x1, float y1, float x2, float y2) {
   }
 }
 
-Matrix* Block::Filter() {
+Matrix<uint8_t>* Block::Filter() {
   if (!has_filtered_cache_) {
     MakeFilteredCache();
   }
@@ -137,7 +132,7 @@ Matrix* Block::Filter() {
   return &filtered_pixels_;
 }
 
-Matrix* Block::SQFilter() {
+Matrix<uint16_t>* Block::SQFilter() {
   if (!has_sq_filtered_cache_) {
     MakeSQFilteredCache();
   }
@@ -146,49 +141,19 @@ Matrix* Block::SQFilter() {
 }
 
 void Block::MakeFilteredCache() {
-  const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
-  const auto sq_filter_size = sq(filter_size_);
-
-  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
-      // calculate average in the window
-      unsigned int filtered_sum = 0u;
-      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
-        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
-          filtered_sum += Get({x, y});
-        }
-      }
-      filtered_pixels_[{w, h}] = filtered_sum / sq_filter_size;
-    }
-  }
-
+  ApplyFilter(pixels_, filtered_pixels_, filter_size_);
   has_filtered_cache_ = true;
 }
 
 void Block::MakeSQFilteredCache() {
-  const auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
-  const auto sq_filter_size = sq(filter_size_);
-
-  Matrix sq_pixels(width_, height_);
+  Matrix<uint16_t> sq_pixels(width_, height_);
   for (auto w = 0u; w < width_; ++w) {
     for (auto h = 0u; h < height_; ++h) {
       sq_pixels[{w, h}] = sq(Get({w, h}));
     }
   }
 
-  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
-      // calculate average in the window
-      unsigned int sq_filtered_sum = 0u;
-      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
-        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
-          sq_filtered_sum += sq_pixels[{x, y}];
-        }
-      }
-      sq_filtered_pixels_[{w, h}] = sq_filtered_sum / sq_filter_size;
-    }
-  }
-
+  ApplyFilter<>(sq_pixels, sq_filtered_pixels_, filter_size_);
   has_sq_filtered_cache_ = true;
 }
 
@@ -206,10 +171,10 @@ float Block::MSSIM(Block& other) {
   unsigned int sample = 0;
   auto filter_offset = (filter_size_ - 1) / 2;  // >= 0
 
-  auto maltiplied = Block(width_);
+  Matrix<uint16_t> multiplied(width_, height_);
   for (auto w = 0u; w < width_; ++w) {
     for (auto h = 0u; h < height_; ++h) {
-      maltiplied.Set({w, h}, Get({w, h}) * other.Get({w, h}));
+      multiplied[{w, h}] = Get({w, h}) * other.Get({w, h});
     }
   }
 
@@ -217,7 +182,8 @@ float Block::MSSIM(Block& other) {
   auto filtered_other = *other.Filter();
   auto filtered_this_sq = *SQFilter();
   auto filtered_other_sq = *other.SQFilter();
-  auto filtered_maltiplied = *maltiplied.Filter();
+  Matrix<uint16_t> filtered_multiplied(width_, height_);
+  ApplyFilter(multiplied, filtered_multiplied, filter_size_);
 
   for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
     for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
@@ -226,7 +192,7 @@ float Block::MSSIM(Block& other) {
 
       float mu_x2 = filtered_this_sq[{w, h}];
       float mu_y2 = filtered_other_sq[{w, h}];
-      float mu_xy = filtered_maltiplied[{w, h}];
+      float mu_xy = filtered_multiplied[{w, h}];
 
       float sigma_x2 = mu_x2 - sq(x);
       float sigma_y2 = mu_y2 - sq(y);

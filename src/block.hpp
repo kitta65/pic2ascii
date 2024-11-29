@@ -13,25 +13,25 @@ class Block {
   unsigned int width_;
   unsigned int height_;
   unsigned int filter_size_;
-  unsigned int has_filtered_cache_;
-  unsigned int has_sq_filtered_cache_;
+  bool has_filtered_cache_;
+  bool has_sq_filtered_cache_;
 
   Block(unsigned int width);
 
   // NOTE (0, 0) is top-left
-  unsigned int& Get(const XY& xy);
-  void Set(const XY& xy, unsigned int grayscale);
+  uint8_t& Get(const XY& xy);
+  void Set(const XY& xy, uint8_t grayscale);
 
   void Clear();
   void Draw(Character ch);
-  Matrix* Filter();
-  Matrix* SQFilter();
+  Matrix<uint8_t>* Filter();
+  Matrix<uint16_t>* SQFilter();
   float MSSIM(Block& other);  // structural similarity index measure
 
  private:
-  Matrix pixels_;  // shouled be accessed by getter / setter
-  Matrix filtered_pixels_;
-  Matrix sq_filtered_pixels_;
+  Matrix<uint8_t> pixels_;  // shouled be accessed by getter / setter
+  Matrix<uint8_t> filtered_pixels_;
+  Matrix<uint16_t> sq_filtered_pixels_;
   void Line(float x1,
             float y1,
             float x2,
@@ -40,6 +40,36 @@ class Block {
   void MakeSQFilteredCache();
   bool IsOutOfRange(const XY& xy);
 };
+
+template <typename T>
+float sq(T f);
+
+template <typename T>
+void ApplyFilter(Matrix<T>& source, Matrix<T>& dest, unsigned int filter_size);
+
+template <typename T>
+float sq(T f) {
+  return f * f;
+}
+
+template <typename T>
+void ApplyFilter(Matrix<T>& source, Matrix<T>& dest, unsigned int filter_size) {
+  const auto filter_offset = (filter_size - 1) / 2;  // >= 0
+  const auto sq_filter_size = sq(filter_size);
+
+  for (auto w = filter_offset; w < (source.width_ - filter_offset); ++w) {
+    for (auto h = filter_offset; h < (source.height_ - filter_offset); ++h) {
+      // calculate average in the window
+      unsigned int filtered_sum = 0u;
+      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
+        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
+          filtered_sum += source[{x, y}];
+        }
+      }
+      dest[{w, h}] = filtered_sum / sq_filter_size;
+    }
+  }
+}
 
 }  // namespace pic2ascii
 
