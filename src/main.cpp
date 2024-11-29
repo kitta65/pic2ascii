@@ -76,6 +76,8 @@ const char* print(Character ch) {
   switch (ch) {
     case SYMBOL_BACKSLASH:
       return "\\";
+    case SYMBOL_CARET:
+      return "^";
     case SYMBOL_DASH:
       return "-";
     case SYMBOL_HASH:

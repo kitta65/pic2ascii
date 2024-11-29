@@ -70,6 +70,10 @@ void Block::Draw(Character ch) {
     case SYMBOL_BACKSLASH:
       Block::Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
+    case SYMBOL_CARET:
+      Block::Line(0.1, 1.25, 0.5275, 1.7775);
+      Block::Line(0.4725, 1.7775, 0.9, 1.25);
+      break;
     case SYMBOL_DASH:
       Block::Line(0.125, 1.0, 1 - 0.125, 1.0);
       break;

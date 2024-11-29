@@ -5,6 +5,7 @@ namespace pic2ascii {
 
 #define ALL_CHARACTERS { \
   SYMBOL_BACKSLASH, \
+  SYMBOL_CARET, \
   SYMBOL_DASH, \
   SYMBOL_HASH, \
   SYMBOL_PIPE, \
