@@ -90,6 +90,8 @@ const char* print(Character ch) {
       return "+";
     case SYMBOL_PIPE:
       return "|";
+    case SYMBOL_RIGHT_SQUARE_BRACKET:
+      return "]";
     case SYMBOL_SLASH:
       return "/";
     case SYMBOL_SMALLER:

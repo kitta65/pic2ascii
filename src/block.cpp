@@ -8,6 +8,7 @@
 namespace pic2ascii {
 
 const float kLineThickness = 0.1;  // 1.0 is the width of Block
+const float kEpsilon = 0.00001;
 
 Block::Block(unsigned int width)
     : width_(width),
@@ -98,6 +99,11 @@ void Block::Draw(Character ch) {
     case SYMBOL_PIPE:
       Line(0.5, 0.1, 0.5, 1.9);
       break;
+    case SYMBOL_RIGHT_SQUARE_BRACKET:
+      Line(0.3, 0.3, 0.3, 1.7);
+      Line(0.25, 0.3, 0.7, 0.3);
+      Line(0.25, 1.7, 0.7, 1.7);
+      break;
     case SYMBOL_SLASH:
       Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
       break;
@@ -121,11 +127,11 @@ void Block::Line(float x1, float y1, float x2, float y2) {
   const float b1 = x1 - x2;
   const float c1 = x2 * y1 - x1 * y2;
 
-  for (unsigned int x_ = 0; x_ < width_; ++x_) {
-    float x = static_cast<float>(x_) / width_;
+  for (unsigned int pixel_x = 0; pixel_x < width_; ++pixel_x) {
+    float x = static_cast<float>(pixel_x) / width_;
 
-    for (unsigned int y_ = 0; y_ < height_; ++y_) {
-      float y = 2 - 2 * static_cast<float>(y_) / height_;
+    for (unsigned int pixel_y = 0; pixel_y < height_; ++pixel_y) {
+      float y = 2 - 2 * static_cast<float>(pixel_y) / height_;
       float d_sq =
           ((a1 * a1 * x * x) + (b1 * b1 * y * y) + (2 * a1 * b1 * x * y) +
            (2 * a1 * c1 * x) + (2 * b1 * c1 * y) + (c1 * c1)) /
@@ -143,12 +149,14 @@ void Block::Line(float x1, float y1, float x2, float y2) {
       // point (p, q) is the intersection of line1 and line2
       float p = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
       float q = (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1);
-      if ((p < x1 && p < x2) || (x1 < p && x2 < p) || (q < y1 && q < y2) ||
-          (y1 < q && y2 < q)) {
+      if ((p < x1 - kEpsilon && p < x2 - kEpsilon) ||
+          (x1 + kEpsilon < p && x2 + kEpsilon < p) ||
+          (q < y1 - kEpsilon && q < y2 - kEpsilon) ||
+          (y1 + kEpsilon < q && y2 + kEpsilon < q)) {
         continue;
       }
 
-      Set({x_, y_}, 0);
+      Set({pixel_x, pixel_y}, 0);
     }
   }
 }
@@ -182,7 +190,8 @@ void Block::MakeSQFilteredCache() {
     }
   }
 
-  ApplyFilter<>(sq_pixels, sq_filtered_pixels_, filter_size_);
+  ApplyFilter<>(sq_pixels, sq_filtered_pixels_,
+                filter_size_);  // TODO template type?
   has_sq_filtered_cache_ = true;
 }
 
