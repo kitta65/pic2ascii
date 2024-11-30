@@ -2,6 +2,10 @@ on:
   pull_request:
     paths: 'src/**'
 
+concurrency:
+  group: benchmark
+  cancel-in-progress: true
+
 jobs:
   benchmark:
     runs-on: ubuntu-24.04
