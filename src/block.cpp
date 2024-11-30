@@ -289,7 +289,7 @@ void Block::MakeSQFilteredCache() {
   Matrix<uint16_t> sq_pixels(width_, height_);
   for (auto w = 0u; w < width_; ++w) {
     for (auto h = 0u; h < height_; ++h) {
-      sq_pixels[{w, h}] = sq(Get({w, h}));
+      sq_pixels[{w, h}] = sq<uint16_t>(Get({w, h}));
     }
   }
 

@@ -77,13 +77,13 @@ class Block {
 };
 
 template <typename T>
-float sq(T f);
+T sq(T f);
 
 template <typename T>
 void ApplyFilter(Matrix<T>& source, Matrix<T>& dest, unsigned int filter_size);
 
 template <typename T>
-float sq(T f) {
+T sq(T f) {
   return f * f;
 }
 
