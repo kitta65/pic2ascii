@@ -8,7 +8,7 @@
 
 namespace pic2ascii {
 
-const float kLineThickness = 0.1;  // 1.0 is the width of Block
+const float kLineThickness = 0.125;  // 1.0 is the width of Block
 const float kEpsilon = 0.00001;
 
 Block::Block(unsigned int width)
@@ -73,8 +73,8 @@ void Block::Draw(Character ch) {
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
     case SYMBOL_CARET:
-      Line(0.1, 1.25, 0.5275, 1.7775);
-      Line(0.4725, 1.7775, 0.9, 1.25);
+      Line(0.1, 1.35, 0.54, 1.79);
+      Line(0.46, 1.79, 0.9, 1.35);
       break;
     case SYMBOL_DASH:
       Line(0.125, 1.0, 1 - 0.125, 1.0);
@@ -86,17 +86,17 @@ void Block::Draw(Character ch) {
     case SYMBOL_HASH:
       Line(0.25, 0.75, 1 - 0.25, 0.75);
       Line(0.25, 1.25, 1 - 0.25, 1.25);
-      Line(0.35, 0.45, 0.45, 1.55);
-      Line(0.55, 0.45, 0.65, 1.55);
+      Line(0.34, 0.45, 0.44, 1.55);
+      Line(0.56, 0.45, 0.66, 1.55);
       break;
     case SYMBOL_LARGER:
-      Line(0.25, 1.47, 0.75, 0.97);
-      Line(0.25, 0.53, 0.75, 1.03);
+      Line(0.25, 1.465, 0.75, 0.965);
+      Line(0.25, 0.535, 0.75, 1.035);
       break;
     case SYMBOL_LEFT_SQUARE_BRACKET:
-      Line(0.7, 0.3, 0.7, 1.7);
-      Line(0.3, 0.3, 0.745, 0.3);
-      Line(0.3, 1.7, 0.745, 1.7);
+      Line(0.3, 0.3, 0.3, 1.7);
+      Line(0.24, 0.3, 0.7, 0.3);
+      Line(0.24, 1.7, 0.7, 1.7);
       break;
     case SYMBOL_PLUS:
       Line(0.125, 1.0, 1 - 0.125, 1.0);
@@ -106,16 +106,16 @@ void Block::Draw(Character ch) {
       Line(0.5, 0.1, 0.5, 1.9);
       break;
     case SYMBOL_RIGHT_SQUARE_BRACKET:
-      Line(0.3, 0.3, 0.3, 1.7);
-      Line(0.25, 0.3, 0.7, 0.3);
-      Line(0.25, 1.7, 0.7, 1.7);
+      Line(0.7, 0.3, 0.7, 1.7);
+      Line(0.3, 0.3, 0.76, 0.3);
+      Line(0.3, 1.7, 0.76, 1.7);
       break;
     case SYMBOL_SLASH:
       Line(0.125, 0.125, 1 - 0.125, 2 - 0.125);
       break;
     case SYMBOL_SMALLER:
-      Line(0.25, 0.97, 0.75, 1.47);
-      Line(0.25, 1.03, 0.75, 0.53);
+      Line(0.75, 1.465, 0.25, 0.965);
+      Line(0.75, 0.535, 0.25, 1.035);
       break;
     case SYMBOL_SPACE:
       break;
