@@ -168,6 +168,9 @@ void Block::Draw(Character ch) {
       Line(0.24, 0.3, 0.7, 0.3);
       Line(0.24, 1.7, 0.7, 1.7);
       break;
+    case SYMBOL_MACRON:
+      Line(0.125, 1.8, 1 - 0.125, 1.8);
+      break;
     case SYMBOL_PLUS:
       Line(0.125, 1.0, 1 - 0.125, 1.0);
       Line(0.5, 0.625, 0.5, 1.375);
@@ -190,7 +193,7 @@ void Block::Draw(Character ch) {
     case SYMBOL_SPACE:
       break;
     case SYMBOL_UNDERSCORE:
-      Line(0.125, 0.125, 1 - 0.125, 0.125);
+      Line(0.125, 0.2, 1 - 0.125, 0.2);
       break;
     default:
       throw std::logic_error("not implemented");
