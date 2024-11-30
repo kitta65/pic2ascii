@@ -70,49 +70,74 @@ void Block::Draw(Character ch) {
 
   switch (ch) {
     case ALPHABET_UPPER_A:
-      Line(0.1, 0.2, 0.5, 1.8);
-      Line(0.5, 1.8, 0.9, 0.2);
-      Line(0.3, 0.8, 0.7, 0.8);
-      Line(0.5, 1.815, 0.5, 1.8);
+      Line(0.15, 0.45, 0.5, 1.55);
+      Line(0.5, 1.55, 0.85, 0.45);
+      Line(0.25, 0.9, 0.75, 0.9);
+      Line(0.5, 1.5, 0.5, 1.57);
       break;
     case ALPHABET_UPPER_E:
-      // TODO
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 1.5, 0.75, 1.5);
+      Line(0.18, 0.5, 0.75, 0.5);
+      Line(0.18, 1, 0.75, 1);
       break;
     case ALPHABET_UPPER_F:
-      // TODO
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 1.5, 0.75, 1.5);
+      Line(0.18, 1, 0.75, 1);
       break;
     case ALPHABET_UPPER_H:
-      // TODO
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 1, 0.75, 1);
+      Line(0.75, 0.45, 0.75, 1.55);
       break;
     case ALPHABET_UPPER_K:
-      // TODO
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.25, 0.95, 0.75, 1.51);
+      Line(0.25, 1.05, 0.75, 0.49);
       break;
     case ALPHABET_UPPER_L:
-      // TODO
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 0.5, 0.75, 0.5);
       break;
     case ALPHABET_UPPER_M:
-      // TODO
+      Line(0.3, 1.55, 0.2, 0.45);
+      Line(0.3, 1.5, 0.5, 0.5);
+      Line(0.7, 1.5, 0.5, 0.5);
+      Line(0.7, 1.55, 0.8, 0.45);
       break;
     case ALPHABET_UPPER_N:
-      // TODO
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.25, 1.52, 0.75, 0.48);
+      Line(0.75, 0.45, 0.75, 1.55);
       break;
     case ALPHABET_UPPER_T:
-      // TODO
+      Line(0.2, 1.45, 0.8, 1.45);
+      Line(0.5, 1.5, 0.5, 0.45);
       break;
     case ALPHABET_UPPER_V:
-      // TODO
+      Line(0.5, 0.45, 0.75, 1.55);
+      Line(0.25, 1.55, 0.5, 0.45);
       break;
     case ALPHABET_UPPER_W:
-      // TODO
+      Line(0.3, 0.45, 0.2, 1.55);
+      Line(0.3, 0.5, 0.5, 1.5);
+      Line(0.7, 0.5, 0.5, 1.5);
+      Line(0.7, 0.45, 0.8, 1.55);
       break;
     case ALPHABET_UPPER_X:
-      // TODO
+      Line(0.25, 0.45, 1 - 0.25, 1.55);
+      Line(0.25, 1.55, 1 - 0.25, 0.45);
       break;
     case ALPHABET_UPPER_Y:
-      // TODO
+      Line(0.5, 1.0, 0.75, 1.55);
+      Line(0.25, 1.55, 0.5, 1.0);
+      Line(0.5, 1.1, 0.5, 0.45);
       break;
     case ALPHABET_UPPER_Z:
-      // TODO
+      Line(0.2, 0.55, 0.8, 0.55);
+      Line(0.2, 1.45, 0.8, 1.45);
+      Line(0.26, 0.59, 0.74, 1.41);
       break;
     case SYMBOL_BACKSLASH:
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
