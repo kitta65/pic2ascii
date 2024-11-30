@@ -77,6 +77,32 @@ const char* print(Character ch) {
   switch (ch) {
     case ALPHABET_UPPER_A:
       return "A";
+    case ALPHABET_UPPER_E:
+      return "E";
+    case ALPHABET_UPPER_F:
+      return "F";
+    case ALPHABET_UPPER_H:
+      return "H";
+    case ALPHABET_UPPER_K:
+      return "K";
+    case ALPHABET_UPPER_L:
+      return "L";
+    case ALPHABET_UPPER_M:
+      return "M";
+    case ALPHABET_UPPER_N:
+      return "N";
+    case ALPHABET_UPPER_T:
+      return "T";
+    case ALPHABET_UPPER_V:
+      return "V";
+    case ALPHABET_UPPER_W:
+      return "W";
+    case ALPHABET_UPPER_X:
+      return "X";
+    case ALPHABET_UPPER_Y:
+      return "Y";
+    case ALPHABET_UPPER_Z:
+      return "Z";
     case SYMBOL_BACKSLASH:
       return "\\";
     case SYMBOL_CARET:

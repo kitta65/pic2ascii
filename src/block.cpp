@@ -75,6 +75,45 @@ void Block::Draw(Character ch) {
       Line(0.3, 0.8, 0.7, 0.8);
       Line(0.5, 1.815, 0.5, 1.8);
       break;
+    case ALPHABET_UPPER_E:
+      // TODO
+      break;
+    case ALPHABET_UPPER_F:
+      // TODO
+      break;
+    case ALPHABET_UPPER_H:
+      // TODO
+      break;
+    case ALPHABET_UPPER_K:
+      // TODO
+      break;
+    case ALPHABET_UPPER_L:
+      // TODO
+      break;
+    case ALPHABET_UPPER_M:
+      // TODO
+      break;
+    case ALPHABET_UPPER_N:
+      // TODO
+      break;
+    case ALPHABET_UPPER_T:
+      // TODO
+      break;
+    case ALPHABET_UPPER_V:
+      // TODO
+      break;
+    case ALPHABET_UPPER_W:
+      // TODO
+      break;
+    case ALPHABET_UPPER_X:
+      // TODO
+      break;
+    case ALPHABET_UPPER_Y:
+      // TODO
+      break;
+    case ALPHABET_UPPER_Z:
+      // TODO
+      break;
     case SYMBOL_BACKSLASH:
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
