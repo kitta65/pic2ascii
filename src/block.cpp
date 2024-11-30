@@ -149,7 +149,10 @@ void Block::Draw(Character ch) {
       Line(0.25, 1.25, 0.5, 0.45);
       break;
     case ALPHABET_LOWER_W:
-      // TODO
+      Line(0.3, 0.45, 0.2, 1.25);
+      Line(0.3, 0.5, 0.5, 1.2);
+      Line(0.7, 0.5, 0.5, 1.2);
+      Line(0.7, 0.45, 0.8, 1.25);
       break;
     case ALPHABET_LOWER_X:
       // TODO
