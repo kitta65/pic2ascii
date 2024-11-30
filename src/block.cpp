@@ -155,10 +155,13 @@ void Block::Draw(Character ch) {
       Line(0.7, 0.45, 0.8, 1.25);
       break;
     case ALPHABET_LOWER_X:
-      // TODO
+      Line(0.25, 0.45, 1 - 0.25, 1.25);
+      Line(0.25, 1.25, 1 - 0.25, 0.45);
       break;
     case ALPHABET_LOWER_Z:
-      // TODO
+      Line(0.2, 0.55, 0.8, 0.55);
+      Line(0.2, 1.15, 0.8, 1.15);
+      Line(0.26, 0.59, 0.74, 1.11);
       break;
     case SYMBOL_BACKSLASH:
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
