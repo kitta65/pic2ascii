@@ -13,10 +13,19 @@ jobs:
       - run: make FLAG=-DPIC2ASCII_RELEASE
       - run: |
           {
+            echo 'to STDOUT\n'
             echo '```'
             hyperfine './bin/main input/sample.png --block_width=16'
             echo '```'
-          } > /tmp/comment.txt
+            echo '\n---\n'
+          } >> /tmp/comment.txt
+      - run: |
+          {
+            echo 'to png file\n'
+            echo '```'
+            hyperfine './bin/main input/sample.png output/sample.png --block_width=16'
+            echo '```'
+          } >> /tmp/comment.txt
       - uses: thollander/actions-comment-pull-request@v2
         with:
           comment_tag: from-actions-comment-pull-request
