@@ -86,6 +86,8 @@ const char* print(Character ch) {
       return "#";
     case SYMBOL_LARGER:
       return ">";
+    case SYMBOL_LEFT_SQUARE_BRACKET:
+      return "[";
     case SYMBOL_PLUS:
       return "+";
     case SYMBOL_PIPE:

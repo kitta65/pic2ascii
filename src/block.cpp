@@ -92,6 +92,11 @@ void Block::Draw(Character ch) {
       Line(0.25, 1.47, 0.75, 0.97);
       Line(0.25, 0.53, 0.75, 1.03);
       break;
+    case SYMBOL_LEFT_SQUARE_BRACKET:
+      Line(0.7, 0.3, 0.7, 1.7);
+      Line(0.3, 0.3, 0.745, 0.3);
+      Line(0.3, 1.7, 0.745, 1.7);
+      break;
     case SYMBOL_PLUS:
       Line(0.125, 1.0, 1 - 0.125, 1.0);
       Line(0.5, 0.625, 0.5, 1.375);
