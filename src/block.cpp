@@ -293,8 +293,7 @@ void Block::MakeSQFilteredCache() {
     }
   }
 
-  ApplyFilter<>(sq_pixels, sq_filtered_pixels_,
-                filter_size_);  // TODO template type?
+  ApplyFilter(sq_pixels, sq_filtered_pixels_, filter_size_);
   has_sq_filtered_cache_ = true;
 }
 
