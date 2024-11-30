@@ -69,6 +69,100 @@ void Block::Draw(Character ch) {
   Block::Clear();
 
   switch (ch) {
+    case ALPHABET_UPPER_A:
+      Line(0.15, 0.45, 0.5, 1.55);
+      Line(0.5, 1.55, 0.85, 0.45);
+      Line(0.25, 0.9, 0.75, 0.9);
+      Line(0.5, 1.5, 0.5, 1.57);
+      break;
+    case ALPHABET_UPPER_E:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 1.5, 0.75, 1.5);
+      Line(0.18, 0.5, 0.75, 0.5);
+      Line(0.18, 1, 0.75, 1);
+      break;
+    case ALPHABET_UPPER_F:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 1.5, 0.75, 1.5);
+      Line(0.18, 1, 0.75, 1);
+      break;
+    case ALPHABET_UPPER_H:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 1, 0.75, 1);
+      Line(0.75, 0.45, 0.75, 1.55);
+      break;
+    case ALPHABET_UPPER_K:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.25, 0.95, 0.75, 1.51);
+      Line(0.25, 1.05, 0.75, 0.49);
+      break;
+    case ALPHABET_UPPER_L:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.18, 0.5, 0.75, 0.5);
+      break;
+    case ALPHABET_UPPER_M:
+      Line(0.3, 1.55, 0.2, 0.45);
+      Line(0.3, 1.5, 0.5, 0.5);
+      Line(0.7, 1.5, 0.5, 0.5);
+      Line(0.7, 1.55, 0.8, 0.45);
+      break;
+    case ALPHABET_UPPER_N:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.25, 1.52, 0.75, 0.48);
+      Line(0.75, 0.45, 0.75, 1.55);
+      break;
+    case ALPHABET_UPPER_T:
+      Line(0.2, 1.45, 0.8, 1.45);
+      Line(0.5, 1.5, 0.5, 0.45);
+      break;
+    case ALPHABET_UPPER_V:
+      Line(0.5, 0.45, 0.75, 1.55);
+      Line(0.25, 1.55, 0.5, 0.45);
+      break;
+    case ALPHABET_UPPER_W:
+      Line(0.3, 0.45, 0.2, 1.55);
+      Line(0.3, 0.5, 0.5, 1.5);
+      Line(0.7, 0.5, 0.5, 1.5);
+      Line(0.7, 0.45, 0.8, 1.55);
+      break;
+    case ALPHABET_UPPER_X:
+      Line(0.25, 0.45, 1 - 0.25, 1.55);
+      Line(0.25, 1.55, 1 - 0.25, 0.45);
+      break;
+    case ALPHABET_UPPER_Y:
+      Line(0.5, 1.0, 0.75, 1.55);
+      Line(0.25, 1.55, 0.5, 1.0);
+      Line(0.5, 1.1, 0.5, 0.45);
+      break;
+    case ALPHABET_UPPER_Z:
+      Line(0.2, 0.55, 0.8, 0.55);
+      Line(0.2, 1.45, 0.8, 1.45);
+      Line(0.26, 0.59, 0.74, 1.41);
+      break;
+    case ALPHABET_LOWER_K:
+      Line(0.25, 0.45, 0.25, 1.55);
+      Line(0.26, 0.75, 0.76, 1.25);
+      Line(0.36, 0.86, 0.76, 0.46);
+      break;
+    case ALPHABET_LOWER_V:
+      Line(0.5, 0.45, 0.75, 1.25);
+      Line(0.25, 1.25, 0.5, 0.45);
+      break;
+    case ALPHABET_LOWER_W:
+      Line(0.3, 0.45, 0.2, 1.25);
+      Line(0.3, 0.5, 0.5, 1.2);
+      Line(0.7, 0.5, 0.5, 1.2);
+      Line(0.7, 0.45, 0.8, 1.25);
+      break;
+    case ALPHABET_LOWER_X:
+      Line(0.25, 0.45, 1 - 0.25, 1.25);
+      Line(0.25, 1.25, 1 - 0.25, 0.45);
+      break;
+    case ALPHABET_LOWER_Z:
+      Line(0.2, 0.55, 0.8, 0.55);
+      Line(0.2, 1.15, 0.8, 1.15);
+      Line(0.26, 0.59, 0.74, 1.11);
+      break;
     case SYMBOL_BACKSLASH:
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
@@ -98,6 +192,9 @@ void Block::Draw(Character ch) {
       Line(0.24, 0.3, 0.7, 0.3);
       Line(0.24, 1.7, 0.7, 1.7);
       break;
+    case SYMBOL_MACRON:
+      Line(0.125, 1.8, 1 - 0.125, 1.8);
+      break;
     case SYMBOL_PLUS:
       Line(0.125, 1.0, 1 - 0.125, 1.0);
       Line(0.5, 0.625, 0.5, 1.375);
@@ -120,7 +217,7 @@ void Block::Draw(Character ch) {
     case SYMBOL_SPACE:
       break;
     case SYMBOL_UNDERSCORE:
-      Line(0.125, 0.125, 1 - 0.125, 0.125);
+      Line(0.125, 0.2, 1 - 0.125, 0.2);
       break;
     default:
       throw std::logic_error("not implemented");

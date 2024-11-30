@@ -13,7 +13,7 @@ TEST_CASE("draw all characters") {
   unsigned int sizes[] = {8, 128};
   for (auto s : sizes) {
     auto block = p2a::Block(s);
-    p2a::PNG png("input/white.png");
+    p2a::PNG png("input/white_2048x2048.png");
     const unsigned int n =
         sizeof(p2a::kAllCharacters) / sizeof(*p2a::kAllCharacters);
 
@@ -36,11 +36,11 @@ TEST_CASE("draw all characters") {
 TEST_CASE("MSSIM does not change") {
   const unsigned int width = 128;
   auto block_slash = p2a::Block(width);
-  p2a::PNG png_slash("./input/slash.png");
+  p2a::PNG png_slash("./input/slash_128x256.png");
   png_slash.ReadNthBlock(0, block_slash);
 
   auto block_pipe = p2a::Block(width);
-  p2a::PNG png_pipe("./input/pipe.png");
+  p2a::PNG png_pipe("./input/pipe_128x256.png");
   png_pipe.ReadNthBlock(0, block_pipe);
 
   REQUIRE_THAT(block_slash.MSSIM(block_pipe),
