@@ -1,3 +1,5 @@
+#include <format>
+#include <string>
 #include "../libraries/catch_amalgamated.hpp"
 
 #include "xy.hpp"
@@ -8,22 +10,27 @@
 namespace p2a = pic2ascii;
 
 TEST_CASE("draw all characters") {
-  auto block = p2a::Block(128);
-  p2a::PNG png("input/white.png");
-  const unsigned int n =
-      sizeof(p2a::kAllCharacters) / sizeof(*p2a::kAllCharacters);
+  unsigned int sizes[] = {8, 128};
+  for (auto s : sizes) {
+    auto block = p2a::Block(s);
+    p2a::PNG png("input/white.png");
+    const unsigned int n =
+        sizeof(p2a::kAllCharacters) / sizeof(*p2a::kAllCharacters);
 
-  // if this assertion fails, you should prepare larger image
-  REQUIRE_NOTHROW(png.ReadNthBlock(n, block));
+    // if this assertion fails, you should prepare larger image
+    REQUIRE_NOTHROW(png.ReadNthBlock(n, block));
 
-  for (auto idx = 0u; idx < n; ++idx) {
-    png.ReadNthBlock(idx, block);
-    REQUIRE_NOTHROW(block.Draw(p2a::kAllCharacters[idx]));
-    png.WriteNthBlock(idx, block);
+    for (auto idx = 0u; idx < n; ++idx) {
+      png.ReadNthBlock(idx, block);
+      REQUIRE_NOTHROW(block.Draw(p2a::kAllCharacters[idx]));
+      png.WriteNthBlock(idx, block);
+    }
+
+    std::string filename =
+        std::format("output/test_other_draw_all_characters_{}.png", s);
+    // manually verify output image
+    png.Save(filename.c_str());
   }
-
-  // manually verify output image
-  png.Save("output/test_other_draw_all_characters.png");
 }
 
 TEST_CASE("MSSIM does not change") {
