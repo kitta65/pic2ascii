@@ -75,6 +75,8 @@ std::vector<Block> characters(unsigned int block_width) {
 // https://stackoverflow.com/questions/2579874/what-is-the-lifetime-of-a-string-literal-returned-by-a-function
 const char* print(Character ch) {
   switch (ch) {
+    case ALPHABET_UPPER_A:
+      return "A";
     case SYMBOL_BACKSLASH:
       return "\\";
     case SYMBOL_CARET:

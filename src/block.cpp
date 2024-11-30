@@ -69,6 +69,12 @@ void Block::Draw(Character ch) {
   Block::Clear();
 
   switch (ch) {
+    case ALPHABET_UPPER_A:
+      Line(0.1, 0.2, 0.5, 1.8);
+      Line(0.5, 1.8, 0.9, 0.2);
+      Line(0.3, 0.8, 0.7, 0.8);
+      Line(0.5, 1.815, 0.5, 1.8);
+      break;
     case SYMBOL_BACKSLASH:
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
