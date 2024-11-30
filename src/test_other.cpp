@@ -13,7 +13,7 @@ TEST_CASE("draw all characters") {
   unsigned int sizes[] = {8, 128};
   for (auto s : sizes) {
     auto block = p2a::Block(s);
-    p2a::PNG png("input/white.png");
+    p2a::PNG png("input/white_2048x2048.png");
     const unsigned int n =
         sizeof(p2a::kAllCharacters) / sizeof(*p2a::kAllCharacters);
 

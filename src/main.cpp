@@ -103,6 +103,16 @@ const char* print(Character ch) {
       return "Y";
     case ALPHABET_UPPER_Z:
       return "Z";
+    case ALPHABET_LOWER_K:
+      return "k";
+    case ALPHABET_LOWER_V:
+      return "v";
+    case ALPHABET_LOWER_W:
+      return "w";
+    case ALPHABET_LOWER_X:
+      return "x";
+    case ALPHABET_LOWER_Z:
+      return "z";
     case SYMBOL_BACKSLASH:
       return "\\";
     case SYMBOL_CARET:

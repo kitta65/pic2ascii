@@ -139,6 +139,21 @@ void Block::Draw(Character ch) {
       Line(0.2, 1.45, 0.8, 1.45);
       Line(0.26, 0.59, 0.74, 1.41);
       break;
+    case ALPHABET_LOWER_K:
+      // TODO
+      break;
+    case ALPHABET_LOWER_V:
+      // TODO
+      break;
+    case ALPHABET_LOWER_W:
+      // TODO
+      break;
+    case ALPHABET_LOWER_X:
+      // TODO
+      break;
+    case ALPHABET_LOWER_Z:
+      // TODO
+      break;
     case SYMBOL_BACKSLASH:
       Line(0.125, 2.0 - 0.125, 1 - 0.125, 0.125);
       break;
