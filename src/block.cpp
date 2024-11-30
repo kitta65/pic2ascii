@@ -67,6 +67,7 @@ void Block::Clear() {
 
 void Block::Draw(Character ch) {
   Block::Clear();
+
   switch (ch) {
     case ALPHABET_UPPER_A:
       Line(0.15, 0.45, 0.5, 1.55);
