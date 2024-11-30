@@ -13,15 +13,15 @@ jobs:
       - run: make FLAG=-DPIC2ASCII_RELEASE
       - run: |
           {
-            echo 'to STDOUT\n'
+            echo -e 'to STDOUT\n'
             echo '```'
             hyperfine './bin/main input/sample.png --block_width=16'
             echo '```'
-            echo '\n---\n'
+            echo -e '\n---\n'
           } >> /tmp/comment.txt
       - run: |
           {
-            echo 'to png file\n'
+            echo -e 'to png file\n'
             echo '```'
             hyperfine './bin/main input/sample.png output/sample.png --block_width=16'
             echo '```'
