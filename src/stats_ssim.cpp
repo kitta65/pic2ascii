@@ -11,7 +11,7 @@ namespace p2a = pic2ascii;
 
 int main() {
   std::fstream file;
-  file.open("./jupyter/mssim.tsv", std::ios_base::out);
+  file.open("./stats/mssim.tsv", std::ios_base::out);
   if (!file.is_open()) {
     std::cout << "failed to open file" << std::endl;
     return EXIT_FAILURE;
