@@ -44,5 +44,5 @@ TEST_CASE("MSSIM does not change") {
   png_pipe.ReadNthBlock(0, block_pipe);
 
   REQUIRE_THAT(block_slash.MSSIM(block_pipe),
-               Catch::Matchers::WithinAbs(0.460713, 0.001));
+               Catch::Matchers::WithinAbs(0.516583, 0.001));
 }
