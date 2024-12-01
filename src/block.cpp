@@ -92,6 +92,7 @@ Block::Block(unsigned int width)
     : width_(width),
       height_(width * 2),
       filter_size_(width / 4),
+      skip_size_(1 + width / 32),
       has_filtered_cache_(false),
       has_sq_filtered_cache_(false),
       pixels_(width, width * 2),
@@ -100,7 +101,6 @@ Block::Block(unsigned int width)
   if (width_ <= 0) {
     throw std::logic_error("width should be greater than 0");
   }
-  // TODO max filter size
   if (filter_size_ % 2 == 0) {
     filter_size_ += 1;  // should be odd number
   }
@@ -359,7 +359,7 @@ Matrix<uint16_t>* Block::SQFilter() {
 }
 
 void Block::MakeFilteredCache() {
-  ApplyFilter(pixels_, filtered_pixels_, filter_size_);
+  ApplyFilter(pixels_, filtered_pixels_, filter_size_, skip_size_);
   has_filtered_cache_ = true;
 }
 
@@ -371,7 +371,7 @@ void Block::MakeSQFilteredCache() {
     }
   }
 
-  ApplyFilter(sq_pixels, sq_filtered_pixels_, filter_size_);
+  ApplyFilter(sq_pixels, sq_filtered_pixels_, filter_size_, skip_size_);
   has_sq_filtered_cache_ = true;
 }
 
@@ -401,11 +401,11 @@ float Block::MSSIM(Block& other) {
   auto filtered_this_sq = *SQFilter();
   auto filtered_other_sq = *other.SQFilter();
   Matrix<uint16_t> filtered_multiplied(width_, height_);
-  ApplyFilter(multiplied, filtered_multiplied, filter_size_);
+  ApplyFilter(multiplied, filtered_multiplied, filter_size_, skip_size_);
 
-  // TODO skip rate
-  for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
+  for (auto w = filter_offset; w < (width_ - filter_offset); w += skip_size_) {
+    for (auto h = filter_offset; h < (height_ - filter_offset);
+         h += skip_size_) {
       float x = filtered_this[{w, h}];
       float y = filtered_other[{w, h}];
 

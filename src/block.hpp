@@ -3,42 +3,19 @@
 
 namespace pic2ascii {
 
-#define ALL_CHARACTERS { \
-  ALPHABET_UPPER_A, \
-  ALPHABET_UPPER_E, \
-  ALPHABET_UPPER_F, \
-  ALPHABET_UPPER_H, \
-  ALPHABET_UPPER_K, \
-  ALPHABET_UPPER_L, \
-  ALPHABET_UPPER_M, \
-  ALPHABET_UPPER_N, \
-  ALPHABET_UPPER_T, \
-  ALPHABET_UPPER_V, \
-  ALPHABET_UPPER_W, \
-  ALPHABET_UPPER_X, \
-  ALPHABET_UPPER_Y, \
-  ALPHABET_UPPER_Z, \
-  ALPHABET_LOWER_K, \
-  ALPHABET_LOWER_V, \
-  ALPHABET_LOWER_W, \
-  ALPHABET_LOWER_X, \
-  ALPHABET_LOWER_Z, \
-  SYMBOL_BACKSLASH, \
-  SYMBOL_CARET, \
-  SYMBOL_DASH, \
-  SYMBOL_EQUAL, \
-  SYMBOL_HASH, \
-  SYMBOL_LARGER, \
-  SYMBOL_MACRON, \
-  SYMBOL_LEFT_SQUARE_BRACKET, \
-  SYMBOL_PIPE, \
-  SYMBOL_PLUS, \
-  SYMBOL_RIGHT_SQUARE_BRACKET, \
-  SYMBOL_SLASH, \
-  SYMBOL_SMALLER, \
-  SYMBOL_SPACE, \
-  SYMBOL_UNDERSCORE \
-}
+#define ALL_CHARACTERS                                              \
+  {ALPHABET_UPPER_A, ALPHABET_UPPER_E, ALPHABET_UPPER_F,            \
+   ALPHABET_UPPER_H, ALPHABET_UPPER_K, ALPHABET_UPPER_L,            \
+   ALPHABET_UPPER_M, ALPHABET_UPPER_N, ALPHABET_UPPER_T,            \
+   ALPHABET_UPPER_V, ALPHABET_UPPER_W, ALPHABET_UPPER_X,            \
+   ALPHABET_UPPER_Y, ALPHABET_UPPER_Z, ALPHABET_LOWER_K,            \
+   ALPHABET_LOWER_V, ALPHABET_LOWER_W, ALPHABET_LOWER_X,            \
+   ALPHABET_LOWER_Z, SYMBOL_BACKSLASH, SYMBOL_CARET,                \
+   SYMBOL_DASH,      SYMBOL_EQUAL,     SYMBOL_HASH,                 \
+   SYMBOL_LARGER,    SYMBOL_MACRON,    SYMBOL_LEFT_SQUARE_BRACKET,  \
+   SYMBOL_PIPE,      SYMBOL_PLUS,      SYMBOL_RIGHT_SQUARE_BRACKET, \
+   SYMBOL_SLASH,     SYMBOL_SMALLER,   SYMBOL_SPACE,                \
+   SYMBOL_UNDERSCORE}
 enum Character ALL_CHARACTERS;
 const Character kAllCharacters[] = ALL_CHARACTERS;
 #undef ALL_CHARACTERS
@@ -50,6 +27,7 @@ class Block {
   unsigned int width_;
   unsigned int height_;
   unsigned int filter_size_;
+  unsigned int skip_size_;
   bool has_filtered_cache_;
   bool has_sq_filtered_cache_;
 
@@ -82,7 +60,10 @@ template <typename T>
 T sq(T f);
 
 template <typename T>
-void ApplyFilter(Matrix<T>& source, Matrix<T>& dest, unsigned int filter_size);
+void ApplyFilter(Matrix<T>& source,
+                 Matrix<T>& dest,
+                 unsigned int filter_size,
+                 unsigned int skip_size);
 
 template <typename T>
 T sq(T f) {
@@ -90,21 +71,27 @@ T sq(T f) {
 }
 
 template <typename T>
-void ApplyFilter(Matrix<T>& source, Matrix<T>& dest, unsigned int filter_size) {
+void ApplyFilter(Matrix<T>& source,
+                 Matrix<T>& dest,
+                 unsigned int filter_size,
+                 unsigned int skip_size) {
   const auto filter_offset = (filter_size - 1) / 2;  // >= 0
-  const auto sq_filter_size = sq(filter_size);
 
-  // TODO skip rate
-  for (auto w = filter_offset; w < (source.width_ - filter_offset); ++w) {
-    for (auto h = filter_offset; h < (source.height_ - filter_offset); ++h) {
+  for (auto w = filter_offset; w < (source.width_ - filter_offset);
+       w += skip_size) {
+    for (auto h = filter_offset; h < (source.height_ - filter_offset);
+         h += skip_size) {
       // calculate average in the window
       unsigned int filtered_sum = 0u;
-      for (auto x = w - filter_offset; x <= w + filter_offset; ++x) {
-        for (auto y = h - filter_offset; y <= h + filter_offset; ++y) {
+      unsigned int sample = 0u;
+      for (auto x = w - filter_offset; x <= w + filter_offset; x += skip_size) {
+        for (auto y = h - filter_offset; y <= h + filter_offset;
+             y += skip_size) {
           filtered_sum += source[{x, y}];
+          ++sample;
         }
       }
-      dest[{w, h}] = filtered_sum / sq_filter_size;
+      dest[{w, h}] = filtered_sum / sample;
     }
   }
 }
