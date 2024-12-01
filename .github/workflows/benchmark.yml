@@ -25,10 +25,11 @@ jobs:
           } >> /tmp/comment.txt
       - run: |
           {
-            echo -e 'to png file\n'
+            echo -e 'to STDOUT\n'
             echo '```'
-            hyperfine './bin/main input/sample.png output/sample.png --block_width=16'
+            hyperfine './bin/main input/sample.png --block_width=32'
             echo '```'
+            echo -e '\n---\n'
           } >> /tmp/comment.txt
       - uses: thollander/actions-comment-pull-request@v2
         with:

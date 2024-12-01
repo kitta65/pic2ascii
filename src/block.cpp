@@ -100,6 +100,7 @@ Block::Block(unsigned int width)
   if (width_ <= 0) {
     throw std::logic_error("width should be greater than 0");
   }
+  // TODO max filter size
   if (filter_size_ % 2 == 0) {
     filter_size_ += 1;  // should be odd number
   }
@@ -402,6 +403,7 @@ float Block::MSSIM(Block& other) {
   Matrix<uint16_t> filtered_multiplied(width_, height_);
   ApplyFilter(multiplied, filtered_multiplied, filter_size_);
 
+  // TODO skip rate
   for (auto w = filter_offset; w < (width_ - filter_offset); ++w) {
     for (auto h = filter_offset; h < (height_ - filter_offset); ++h) {
       float x = filtered_this[{w, h}];

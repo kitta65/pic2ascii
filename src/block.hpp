@@ -94,6 +94,7 @@ void ApplyFilter(Matrix<T>& source, Matrix<T>& dest, unsigned int filter_size) {
   const auto filter_offset = (filter_size - 1) / 2;  // >= 0
   const auto sq_filter_size = sq(filter_size);
 
+  // TODO skip rate
   for (auto w = filter_offset; w < (source.width_ - filter_offset); ++w) {
     for (auto h = filter_offset; h < (source.height_ - filter_offset); ++h) {
       // calculate average in the window
