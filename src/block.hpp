@@ -43,6 +43,8 @@ enum Character ALL_CHARACTERS;
 const Character kAllCharacters[] = ALL_CHARACTERS;
 #undef ALL_CHARACTERS
 
+const char* print(Character);
+
 class Block {
  public:
   unsigned int width_;

@@ -11,6 +11,83 @@ namespace pic2ascii {
 const float kLineThickness = 0.125;  // 1.0 is the width of Block
 const float kEpsilon = 0.00001;
 
+// returning `const char*` is valid here
+// https://stackoverflow.com/questions/2579874/what-is-the-lifetime-of-a-string-literal-returned-by-a-function
+const char* print(Character ch) {
+  switch (ch) {
+    case ALPHABET_UPPER_A:
+      return "A";
+    case ALPHABET_UPPER_E:
+      return "E";
+    case ALPHABET_UPPER_F:
+      return "F";
+    case ALPHABET_UPPER_H:
+      return "H";
+    case ALPHABET_UPPER_K:
+      return "K";
+    case ALPHABET_UPPER_L:
+      return "L";
+    case ALPHABET_UPPER_M:
+      return "M";
+    case ALPHABET_UPPER_N:
+      return "N";
+    case ALPHABET_UPPER_T:
+      return "T";
+    case ALPHABET_UPPER_V:
+      return "V";
+    case ALPHABET_UPPER_W:
+      return "W";
+    case ALPHABET_UPPER_X:
+      return "X";
+    case ALPHABET_UPPER_Y:
+      return "Y";
+    case ALPHABET_UPPER_Z:
+      return "Z";
+    case ALPHABET_LOWER_K:
+      return "k";
+    case ALPHABET_LOWER_V:
+      return "v";
+    case ALPHABET_LOWER_W:
+      return "w";
+    case ALPHABET_LOWER_X:
+      return "x";
+    case ALPHABET_LOWER_Z:
+      return "z";
+    case SYMBOL_BACKSLASH:
+      return "\\";
+    case SYMBOL_CARET:
+      return "^";
+    case SYMBOL_DASH:
+      return "-";
+    case SYMBOL_EQUAL:
+      return "=";
+    case SYMBOL_HASH:
+      return "#";
+    case SYMBOL_LARGER:
+      return ">";
+    case SYMBOL_LEFT_SQUARE_BRACKET:
+      return "[";
+    case SYMBOL_MACRON:
+      return "¯";
+    case SYMBOL_PLUS:
+      return "+";
+    case SYMBOL_PIPE:
+      return "|";
+    case SYMBOL_RIGHT_SQUARE_BRACKET:
+      return "]";
+    case SYMBOL_SLASH:
+      return "/";
+    case SYMBOL_SMALLER:
+      return "<";
+    case SYMBOL_SPACE:
+      return " ";
+    case SYMBOL_UNDERSCORE:
+      return "_";
+  }
+
+  throw std::runtime_error("not implemented");
+}
+
 Block::Block(unsigned int width)
     : width_(width),
       height_(width * 2),
