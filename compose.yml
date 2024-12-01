@@ -4,4 +4,4 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - ./jupyter:/home/jovyan/work
+      - ./stats:/home/jovyan/work
