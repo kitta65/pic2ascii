@@ -12,7 +12,8 @@ jobs:
           lfs: true
       - run: make
       - run: |
-          ./bin/main ./input/sample.png ./output/sample.png --block_width=8
+          ./bin/main ./input/sample.png ./output/sample_8.png --block_width=8
+          ./bin/main ./input/sample.png ./output/sample_16.png --block_width=16
       - uses: peter-evans/create-pull-request@v5
         with:
           branch: update-sample/${{ github.ref_name }}
