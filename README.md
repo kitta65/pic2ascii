@@ -23,6 +23,6 @@ make FLAG=-DPIC2ASCII_RELEASE
 
 ## Sample
 
-|input|output|
-|---|---|
-|![input](./input/sample.png)|![output](./output/sample_8.png)|
+|original|block_width=8|block_width=16|
+|---|---|---|
+|![original](./input/sample.png)|![block_width=8](./output/sample_8.png)|![block_width=16](./output/sample_16.png)|
