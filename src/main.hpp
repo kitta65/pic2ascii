@@ -10,6 +10,21 @@ class Args {
 };
 
 std::tuple<std::string, std::string> split(std::string str, std::string ch);
-std::vector<Block> characters(unsigned int block_width);
+template <std::size_t N>
+std::vector<Block> characters(const Character (&charset)[N],
+                              unsigned int block_width);
+
+// implement template function
+template <std::size_t N>
+std::vector<Block> characters(const Character (&charset)[N],
+                              unsigned int block_width) {
+  auto chars = std::vector<Block>();
+  for (auto i = 0u; i < N; ++i) {
+    auto char_ = Block(block_width);
+    char_.Draw(charset[i]);
+    chars.push_back(char_);
+  }
+  return chars;
+}
 
 }  // namespace pic2ascii

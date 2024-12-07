@@ -61,16 +61,6 @@ std::tuple<std::string, std::string> split(std::string str, std::string ch) {
   return std::tuple(left, right);
 }
 
-std::vector<Block> characters(unsigned int block_width) {
-  auto chars = std::vector<Block>();
-  for (auto c : kAllCharacters) {
-    auto char_ = Block(block_width);
-    char_.Draw(c);
-    chars.push_back(char_);
-  }
-  return chars;
-}
-
 }  // namespace pic2ascii
 
 namespace p2a = pic2ascii;
@@ -79,7 +69,7 @@ int main(int argc, char* argv[]) {
   auto args = p2a::Args(argc, argv);
 
   auto block = p2a::Block(args.block_width_);
-  auto chars = p2a::characters(args.block_width_);
+  auto chars = p2a::characters(p2a::kAllCharacters, args.block_width_);
   auto results = std::vector<p2a::Character>();
   p2a::PNG png(args.input_file_.c_str());
 
