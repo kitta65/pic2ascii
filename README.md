@@ -21,8 +21,8 @@ make FLAG=-DPIC2ASCII_RELEASE
 |--block_width=N|N is the width of each character drawn.|
 |--transparent|Background color becomes transparent.|
 
-## Sample
+## Samples
 
-|input|output|
-|---|---|
-|![input](./input/sample.png)|![output](./output/sample.png)|
+|(original)|--block_width=8|--block_width=16|
+|---|---|---|
+|<img src="./input/sample.png" width="300">|<img src="./output/sample_8.png" width="300">|<img src="./output/sample_16.png" width="300">|
