@@ -69,16 +69,8 @@ int main(int argc, char* argv[]) {
   auto args = p2a::Args(argc, argv);
 
   auto block = p2a::Block(args.block_width_);
-  auto representative_chars =
-      p2a::characters(p2a::kRepresentativeCharacters, args.block_width_);
-  auto equal_hash_group_chars =
-      p2a::characters(p2a::kEqualHashGroupCharacters, args.block_width_);
-  auto m_x_group_chars =
-      p2a::characters(p2a::kMXGroupCharacters, args.block_width_);
-  auto t_space_group_chars =
-      p2a::characters(p2a::kTSpaceGroupCharacters, args.block_width_);
-  auto h_group_chars =
-      p2a::characters(p2a::kHGroupCharacters, args.block_width_);
+  auto tier1_chars = p2a::characters(p2a::kTier1Characters, args.block_width_);
+  auto tier2_chars = p2a::characters(p2a::kTier2Characters, args.block_width_);
 
   auto results = std::vector<p2a::Character>();
   p2a::PNG png(args.input_file_.c_str());
@@ -90,44 +82,25 @@ int main(int argc, char* argv[]) {
       auto has_content = png.ReadNthBlock(x, y, block);
 
       if (has_content) {
-        std::vector<p2a::Block>* candidate_blocks = &representative_chars;
-        const p2a::Character* candidate_chars = p2a::kRepresentativeCharacters;
+        std::vector<p2a::Block>* candidate_blocks = &tier1_chars;
+        const p2a::Character* candidate_chars = p2a::kTier1Characters;
         for (auto i = 0u; i < (*candidate_blocks).size(); ++i) {
-          auto mssim = block.MSSIM(representative_chars[i]);
+          auto mssim = block.MSSIM((*candidate_blocks)[i]);
           if (max_mssim < mssim) {
             max_mssim = mssim;
             max_char = candidate_chars[i];
           }
         }
 
-        switch (max_char) {
-          case p2a::SYMBOL_EQUAL:
-          case p2a::SYMBOL_HASH:
-            candidate_blocks = &equal_hash_group_chars;
-            candidate_chars = p2a::kEqualHashGroupCharacters;
-            break;
-          case p2a::ALPHABET_UPPER_M:
-          case p2a::ALPHABET_UPPER_X:
-            candidate_blocks = &m_x_group_chars;
-            candidate_chars = p2a::kMXGroupCharacters;
-            break;
-          case p2a::ALPHABET_UPPER_T:
-          case p2a::SYMBOL_SPACE:
-            candidate_blocks = &t_space_group_chars;
-            candidate_chars = p2a::kTSpaceGroupCharacters;
-            break;
-          case p2a::ALPHABET_UPPER_H:
-            candidate_blocks = &h_group_chars;
-            candidate_chars = p2a::kHGroupCharacters;
-            break;
-          default:
-            throw std::runtime_error("not implemented");
-        }
-        for (auto i = 0u; i < (*candidate_blocks).size(); ++i) {
-          auto mssim = block.MSSIM((*candidate_blocks)[i]);
-          if (max_mssim < mssim) {
-            max_mssim = mssim;
-            max_char = candidate_chars[i];
+        if (max_mssim < 0.5) {
+          candidate_blocks = &tier2_chars;
+          candidate_chars = p2a::kTier2Characters;
+          for (auto i = 0u; i < (*candidate_blocks).size(); ++i) {
+            auto mssim = block.MSSIM((*candidate_blocks)[i]);
+            if (max_mssim < mssim) {
+              max_mssim = mssim;
+              max_char = candidate_chars[i];
+            }
           }
         }
       }
