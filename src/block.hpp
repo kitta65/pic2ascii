@@ -23,7 +23,7 @@ namespace pic2ascii {
   SYMBOL_DASH, \
   SYMBOL_SMALLER, \
   SYMBOL_PLUS
-#define X_M_GROUP_CHARACTERS \
+#define M_X_GROUP_CHARACTERS \
   ALPHABET_UPPER_V, \
   ALPHABET_UPPER_Y, \
   ALPHABET_UPPER_Z, \
@@ -46,25 +46,25 @@ namespace pic2ascii {
 enum Character {
   REPRESENTATIVE_CHARACTERS,
   EQUAL_HASH_GROUP_CHARACTERS,
-  X_M_GROUP_CHARACTERS,
+  M_X_GROUP_CHARACTERS,
   T_SPACE_GROUP_CHARACTERS,
   H_GROUP_CHARACTERS,
 };
 const Character kAllCharacters[] = {
   REPRESENTATIVE_CHARACTERS,
   EQUAL_HASH_GROUP_CHARACTERS,
-  X_M_GROUP_CHARACTERS,
+  M_X_GROUP_CHARACTERS,
   T_SPACE_GROUP_CHARACTERS,
   H_GROUP_CHARACTERS,
 };
 const Character kRepresentativeCharacters[] = {REPRESENTATIVE_CHARACTERS};
 const Character kEqualHashGroupCharacters[] = {EQUAL_HASH_GROUP_CHARACTERS};
-const Character kXMGroupCharacters[] = {X_M_GROUP_CHARACTERS};
+const Character kMXGroupCharacters[] = {M_X_GROUP_CHARACTERS};
 const Character kTSpaceGroupCharacters[] = {T_SPACE_GROUP_CHARACTERS};
 const Character kHGroupCharacters[] = {H_GROUP_CHARACTERS};
 #undef REPERESENTATIVE_CHARACTERS
 #undef EQUAL_HASH_GROUP_CHARACTERS
-#undef X_M_GROUP_CHARACTERS
+#undef M_X_GROUP_CHARACTERS
 #undef T_SPACE_GROUP_CHARACTERS
 #undef H_GROUP_CHARACTERS
 // clang-format on
