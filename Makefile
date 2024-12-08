@@ -33,7 +33,7 @@ src/test_other.hpp: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp sr
 objects/%.o: %.cpp %.hpp
 	mkdir -p objects/src
 	mkdir -p objects/libraries
-	g++ $(FLAG) -std=$(CPP_VERSION) -o $@ -c $< -Wall
+	g++ $(FLAG) -std=$(CPP_VERSION) -o $@ -c $< -Wall -Werror
 
 bin/%: objects/src/%.o
 	mkdir -p bin
