@@ -61,16 +61,6 @@ std::tuple<std::string, std::string> split(std::string str, std::string ch) {
   return std::tuple(left, right);
 }
 
-std::vector<Block> characters(unsigned int block_width) {
-  auto chars = std::vector<Block>();
-  for (auto c : kAllCharacters) {
-    auto char_ = Block(block_width);
-    char_.Draw(c);
-    chars.push_back(char_);
-  }
-  return chars;
-}
-
 }  // namespace pic2ascii
 
 namespace p2a = pic2ascii;
@@ -79,21 +69,40 @@ int main(int argc, char* argv[]) {
   auto args = p2a::Args(argc, argv);
 
   auto block = p2a::Block(args.block_width_);
-  auto chars = p2a::characters(args.block_width_);
+  auto tier1_chars = p2a::characters(p2a::kTier1Characters, args.block_width_);
+  auto tier2_chars = p2a::characters(p2a::kTier2Characters, args.block_width_);
+
   auto results = std::vector<p2a::Character>();
   p2a::PNG png(args.input_file_.c_str());
 
   for (auto y = 0u; y <= png.MaxY(block); ++y) {
     for (auto x = 0u; x <= png.MaxX(block); ++x) {
+      const float stop_mssim = 0.5;
       float max_mssim = 0;
       auto max_char = p2a::SYMBOL_SPACE;
       auto has_content = png.ReadNthBlock(x, y, block);
+
       if (has_content) {
-        for (auto c : p2a::kAllCharacters) {
-          auto mssim = block.MSSIM(chars[c]);
-          if (max_mssim < mssim) {
-            max_mssim = mssim;
-            max_char = c;
+        std::vector<std::vector<p2a::Block>*> tier_blocks = {
+            &tier1_chars,
+            &tier2_chars,
+        };
+        std::vector<const p2a::Character*> tier_chars = {
+            p2a::kTier1Characters,
+            p2a::kTier2Characters,
+        };
+        for (auto i = 0u; i < tier_blocks.size(); ++i) {
+          std::vector<p2a::Block>* candidate_blocks = tier_blocks[i];
+          const p2a::Character* candidate_chars = tier_chars[i];
+          for (auto i = 0u; i < (*candidate_blocks).size(); ++i) {
+            auto mssim = block.MSSIM((*candidate_blocks)[i]);
+            if (max_mssim < mssim) {
+              max_mssim = mssim;
+              max_char = candidate_chars[i];
+            }
+          }
+          if (stop_mssim < max_mssim) {
+            break;
           }
         }
       }
