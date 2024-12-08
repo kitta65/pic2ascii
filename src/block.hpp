@@ -1,6 +1,12 @@
 #ifndef kitta65_pic2ascii_block_hpp
 #define kitta65_pic2ascii_block_hpp
 
+#include <cstdint>
+#include <stdexcept>
+
+#include "xy.hpp"
+#include "matrix.hpp"
+
 namespace pic2ascii {
 
 // clang-format off
@@ -13,33 +19,33 @@ namespace pic2ascii {
   SYMBOL_SPACE, \
   SYMBOL_UNDERSCORE
 #define TIER2_CHARACTERS \
-  ALPHABET_UPPER_H, \
-  ALPHABET_UPPER_M, \
-  ALPHABET_UPPER_T, \
-  ALPHABET_UPPER_X, \
-  SYMBOL_EQUAL, \
-  SYMBOL_HASH, \
+  ALPHABET_LOWER_K, \
   ALPHABET_LOWER_V, \
+  ALPHABET_LOWER_W, \
   ALPHABET_LOWER_X, \
   ALPHABET_LOWER_Z, \
-  ALPHABET_LOWER_W, \
   ALPHABET_UPPER_A, \
-  ALPHABET_UPPER_W, \
-  SYMBOL_LARGER, \
-  SYMBOL_SMALLER, \
-  SYMBOL_PLUS, \
+  ALPHABET_UPPER_E, \
+  ALPHABET_UPPER_F, \
+  ALPHABET_UPPER_H, \
+  ALPHABET_UPPER_K, \
+  ALPHABET_UPPER_L, \
+  ALPHABET_UPPER_M, \
+  ALPHABET_UPPER_N, \
+  ALPHABET_UPPER_T, \
   ALPHABET_UPPER_V, \
+  ALPHABET_UPPER_W, \
+  ALPHABET_UPPER_X, \
   ALPHABET_UPPER_Y, \
   ALPHABET_UPPER_Z, \
   SYMBOL_CARET, \
+  SYMBOL_EQUAL, \
+  SYMBOL_HASH, \
+  SYMBOL_LARGER, \
   SYMBOL_LEFT_SQUARE_BRACKET, \
+  SYMBOL_PLUS, \
   SYMBOL_RIGHT_SQUARE_BRACKET, \
-  ALPHABET_LOWER_K, \
-  ALPHABET_UPPER_E, \
-  ALPHABET_UPPER_F, \
-  ALPHABET_UPPER_K, \
-  ALPHABET_UPPER_L, \
-  ALPHABET_UPPER_N
+  SYMBOL_SMALLER
 enum Character {
   TIER1_CHARACTERS,
   TIER2_CHARACTERS,
@@ -99,6 +105,7 @@ void ApplyFilter(Matrix<T>& source,
                  unsigned int filter_size,
                  unsigned int skip_size);
 
+// implement template functions
 template <typename T>
 T sq(T f) {
   return f * f;

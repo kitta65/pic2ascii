@@ -1,6 +1,15 @@
 #ifndef kitta65_pic2ascii_png_hpp
 #define kitta65_pic2ascii_png_hpp
 
+#include <stdexcept>
+#include <vector>
+
+#include "../libraries/stb_image.h"
+#include "../libraries/stb_image_write.h"
+
+#include "xy.hpp"
+#include "block.hpp"
+
 namespace pic2ascii {
 
 class PNG {

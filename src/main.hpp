@@ -1,3 +1,14 @@
+#ifndef kitta65_pic2ascii_main_hpp
+#define kitta65_pic2ascii_main_hpp
+
+#include <iostream>
+#include <string>
+#include <tuple>
+#include <vector>
+
+#include "block.hpp"
+#include "png.hpp"
+
 namespace pic2ascii {
 
 class Args {
@@ -28,3 +39,5 @@ std::vector<Block> characters(const Character (&charset)[N],
 }
 
 }  // namespace pic2ascii
+
+#endif

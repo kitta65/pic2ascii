@@ -1,5 +1,8 @@
-#include <stdexcept>
-#include <vector>
+#include "png.hpp"
+
+// NOTE
+// include statements below implement functions.
+// they are not ordinary header files.
 
 // see https://github.com/nothings/stb/blob/master/stb_image.h
 #define STB_IMAGE_IMPLEMENTATION
@@ -7,11 +10,6 @@
 // see https://github.com/nothings/stb/blob/master/stb_image_write.h
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../libraries/stb_image_write.h"
-
-#include "xy.hpp"
-#include "matrix.hpp"
-#include "block.hpp"
-#include "png.hpp"
 
 namespace pic2ascii {
 

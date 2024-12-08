@@ -1,9 +1,4 @@
-#include <vector>
-#include "../libraries/catch_amalgamated.hpp"
-#include "xy.hpp"
-#include "matrix.hpp"
-#include "block.hpp"
-#include "png.hpp"
+#include "test_png.hpp"
 
 namespace p2a = pic2ascii;
 
