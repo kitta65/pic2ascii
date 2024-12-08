@@ -20,8 +20,8 @@ make FLAG=-DPIC2ASCII_RELEASE
 
 ## Samples
 
-|options|output|
+||[sample.png](./input/sample.png)|
 |---|---|
-|(original)|<img src="./input/sample.png" width="300">|
+|(original image)|<img src="./input/sample.png" width="300">|
 |--block_width=8|<img src="./output/sample_8.png" width="300">|
 |--block_width=16|<img src="./output/sample_16.png" width="300">|
