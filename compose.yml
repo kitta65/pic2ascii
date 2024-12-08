@@ -1,7 +1,0 @@
-services:
-  jupyter:
-    image: quay.io/jupyter/scipy-notebook:2024-11-19
-    ports:
-      - 8888:8888
-    volumes:
-      - ./stats:/home/jovyan/work
