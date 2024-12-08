@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../libraries/stb_image.h"
+#include "../libraries/stb_image_write.h"
+
 #include "xy.hpp"
 #include "block.hpp"
 

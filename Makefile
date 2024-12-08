@@ -23,7 +23,7 @@ libraries/catch_amalgamated.cpp: libraries
 
 src/matrix.hpp: src/xy.hpp
 src/block.hpp: src/xy.hpp src/matrix.hpp
-src/png.hpp: src/xy.hpp src/matrix.hpp
+src/png.hpp: libraries/stb_image.h libraries/stb_image_write.h src/xy.hpp src/matrix.hpp
 src/main.hpp: src/block.hpp src/png.hpp
 src/test_matrix.hpp: libraries/catch_amalgamated.hpp
 src/test_block.hpp: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp
@@ -34,11 +34,6 @@ objects/%.o: %.cpp %.hpp
 	mkdir -p objects/src
 	mkdir -p objects/libraries
 	g++ $(FLAG) -std=$(CPP_VERSION) -o $@ -c $< -Wall
-
-# NOTE
-# this is exception.
-# one cpp file should include one hpp file.
-objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h
 
 bin/%: objects/src/%.o
 	mkdir -p bin
