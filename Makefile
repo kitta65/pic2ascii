@@ -35,7 +35,6 @@ objects/src/test_block.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.
 objects/src/test_png.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
 objects/src/test_other.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
 objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
-objects/stats_ssim.o: src/xy.hpp src/matrix.hpp src/block.hpp
 
 bin/%: objects/src/%.o
 	mkdir -p bin
@@ -47,7 +46,6 @@ bin/test_other: objects/libraries/catch_amalgamated.o objects/src/block.o object
 bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
 bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
 bin/test_matrix: objects/libraries/catch_amalgamated.o
-bin/stats_ssim: objects/src/block.o
 
 .PHONY: run
 run: bin/main
@@ -59,10 +57,6 @@ test: bin/test_matrix bin/test_block bin/test_png bin/test_other
 	./bin/test_block
 	./bin/test_png
 	./bin/test_other
-
-.PHONY: stats
-stats: bin/stats_ssim
-	./bin/stats_ssim
 
 .PHONY: clean
 clean:
