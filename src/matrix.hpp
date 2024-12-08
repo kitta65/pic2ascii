@@ -1,6 +1,8 @@
-
 #ifndef kitta65_pic2ascii_matrix_hpp
 #define kitta65_pic2ascii_matrix_hpp
+
+#include <vector>
+#include "xy.hpp"
 
 namespace pic2ascii {
 
@@ -17,6 +19,7 @@ class Matrix {
   Matrix<T> operator*(Matrix<T>& other);
 };
 
+// implement template functions
 template <typename T>
 Matrix<T>::Matrix(unsigned int width, unsigned int height)
     : width_(width), height_(height), data_(width * height) {}

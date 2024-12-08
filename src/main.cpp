@@ -1,13 +1,3 @@
-#include <cstdint>
-#include <iostream>
-#include <string>
-#include <tuple>
-#include <vector>
-
-#include "xy.hpp"
-#include "matrix.hpp"
-#include "block.hpp"
-#include "png.hpp"
 #include "main.hpp"
 
 namespace pic2ascii {

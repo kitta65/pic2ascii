@@ -1,9 +1,3 @@
-#include <cstdint>
-#include <stdexcept>
-#include <vector>
-
-#include "xy.hpp"
-#include "matrix.hpp"
 #include "block.hpp"
 
 namespace pic2ascii {

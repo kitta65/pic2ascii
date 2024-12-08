@@ -21,31 +21,34 @@ libraries/catch_amalgamated.hpp: libraries
 libraries/catch_amalgamated.cpp: libraries
 	curl -o $@ https://raw.githubusercontent.com/catchorg/Catch2/$(CATCH2_VERSION)/extras/catch_amalgamated.cpp
 
-objects/%.o: %.cpp
+src/matrix.hpp: src/xy.hpp
+src/block.hpp: src/xy.hpp src/matrix.hpp
+src/png.hpp: src/xy.hpp src/matrix.hpp
+src/main.hpp: src/block.hpp src/png.hpp
+src/test_matrix.hpp: libraries/catch_amalgamated.hpp
+src/test_block.hpp: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp
+src/test_png.hpp: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
+src/test_other.hpp: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
+
+objects/%.o: %.cpp %.hpp
 	mkdir -p objects/src
 	mkdir -p objects/libraries
 	g++ $(FLAG) -std=$(CPP_VERSION) -o $@ -c $< -Wall
 
-# NOTE check include statements in .cpp file
-objects/src/main.o: src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp src/main.hpp
-objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
-objects/src/block.o: src/xy.hpp src/matrix.hpp src/block.hpp
-objects/src/test_matrix.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp
-objects/src/test_block.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp
-objects/src/test_png.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
-objects/src/test_other.o: libraries/catch_amalgamated.hpp src/xy.hpp src/matrix.hpp src/block.hpp src/png.hpp
-objects/libraries/catch_amalgamated.o: libraries/catch_amalgamated.hpp
+# NOTE
+# this is exception.
+# one cpp file should include one hpp file.
+objects/src/png.o: libraries/stb_image.h libraries/stb_image_write.h
 
 bin/%: objects/src/%.o
 	mkdir -p bin
 	g++ -std=$(CPP_VERSION) -o $@ $^
 
-# NOTE check include statements in .cpp file
 bin/main: objects/src/block.o objects/src/png.o
-bin/test_other: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
-bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
-bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
 bin/test_matrix: objects/libraries/catch_amalgamated.o
+bin/test_block: objects/libraries/catch_amalgamated.o objects/src/block.o
+bin/test_png: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
+bin/test_other: objects/libraries/catch_amalgamated.o objects/src/block.o objects/src/png.o
 
 .PHONY: run
 run: bin/main
